@@ -1,0 +1,14 @@
+{
+    "users": [
+        {
+            "username" : "user1",
+            "password" : "password1",
+            "email" : "krechuniak.a@gmail.com",
+            "name" : "Andrii",
+            "surname" : "Krechuniak",
+            "phone" : "+48570246093",
+            "address" : "Broniwskiego 24/126"
+            
+        }
+    ]
+}
