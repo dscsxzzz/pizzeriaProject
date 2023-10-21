@@ -71,26 +71,42 @@ export default {
   },
   
     methods: {
-        async tryLogin() {
-      this.logging = true
-      const response = await fetch("/users.json")
-      const { users } = await response.json()
-      console.log(users)
-      const foundUser = users.find(
-        (user) => user.username === this.username && user.password === this.password
-      );
+      async tryLogin() {
+        this.logging = true
+        const body = {
+          "username": this.username,
+          "password" : this.password
+        }
+        const jsonBody = JSON.stringify(body);
+        console.log(jsonBody)
+      const response = await fetch("https://localhost:7043/login", {
+        method: 'POST',
+        headers: {
+          Accept: 'application.json',
+          'Content-Type': 'application/json'
+        },
+        body: jsonBody,
+        cache: 'default'
+      })
+        const user = await response.json()
+      console.log(user)
+        if (response.status === 200) {
+          setTimeout(() => {
+            this.logging = false;
+          }, 650)
+          
+            this.logged2 = true;
+            setTimeout(() => {
+              this.logged = true
+            }, 1500)
+            setTimeout(() => {
+              this.$emit("logged", user)
+            }, 2500)
+      }
+        else {
       setTimeout(() => {
-        this.logging = false;
-      }, 650)
-      if (foundUser) {
-        this.logged2 = true;
-        setTimeout(() => {
-          this.logged = true
-        }, 1500)
-        setTimeout(() => {
-          this.$emit("logged", foundUser)
-        }, 2500)
-      } else {
+          this.logging = false;
+        }, 650)
         setTimeout(() => {
           this.logged = true
         }, 1500)
@@ -98,7 +114,9 @@ export default {
           this.logged = false
         }, 2500)
       }
-    },renderForm() { 
+      }, renderForm() { 
+        this.username = ""
+        this.password = ""
         this.$emit('update:show', false)
       }
     }

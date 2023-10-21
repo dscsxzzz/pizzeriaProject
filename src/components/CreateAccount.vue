@@ -5,7 +5,7 @@
             <p>{{message}}</p>
             <form @submit.prevent="tryCreateAccount">
                     <input type="text" name="login" :value="username" placeholder="Username"
-                        @change="validateUser($event.target.value)">
+                        @change="username = $event.target.value">
                     <input type="text" :value="name" @change="name = $event.target.value" placeholder="Name">
                     <input type="text" :value="surname" @change="surname = $event.target.value" placeholder="Surname">
                     <input type="text" :value="address" @change="address = $event.target.value" placeholder="Address">
@@ -39,27 +39,16 @@ export default {
             phone: "",
             password: "",
             repeatpassword: "",
-            message: ""
+            message: "",
+            error: false
         }
     },
     methods: {
-        async validateUser(user) {
-            this.username = user;
-            const response = await fetch("/users.json")
-            const { users } = await response.json()
-            console.log(users)
-            const foundUser = users.find(
-                (user) => user.username === this.username
-            );
-            if (foundUser) {
-                this.message = "Username already taken"
-            } else {
-                this.message = ""
-            }
-        },
+        
         async validatePassword() {
             if (this.password.length < 8) {
                 this.message = "Password is too short"
+                this.error = true
                 return 0;
             }
             let big = true;
@@ -73,21 +62,29 @@ export default {
             }
             if (big) {
                 this.message = "Password does not include upper case character"
+                this.error = true
                 return 0;
 
             } else if(number) {
                 this.message = "Password does not include number"
+                this.error = true
+
                 return 0;
             } else {
                 this.message = ""
+                this.error = false
                 return 0;
             }
         },
         async validatePassword2() {
             if (this.password !== this.repeatpassword) {
                 this.message = "Passwords do not match"
+                this.error = true
+
             } else {
                 this.message = ""
+                this.error = false
+
             }
         }, Numberchek(phone) {
             this.phone = phone
@@ -96,17 +93,53 @@ export default {
                 for (let i = 1; i < this.phone.length; i++) {
                     if (isNaN(this.phone[i])) {
                         this.message = "Not valid number";
+                        this.error = true
+
                         return 0;
                     }
                 }
             } else {
                 this.message = "Not valid number";
+                this.error = true
+
                 return 0;
             }
             this.message = "";
+            this.error = false
+
         },
-        tryCreateAccount() {
-            this.renderForm()
+        async tryCreateAccount() {
+            if (!this.error) {
+                const body = {
+                    "username": this.username,
+                    "email": this.email,
+                    "name": this.name,
+                    "surname": this.surname,
+                    "address": this.address,
+                    "phone": this.phone,
+                    "password": this.password,
+                }
+                const jsonBody = JSON.stringify(body);
+                console.log(jsonBody)
+                const response = await fetch("https://localhost:7043/user", {
+                    method: 'POST',
+                    headers: {
+                        Accept: 'application.json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: jsonBody,
+                    cache: 'default'
+                })
+                const result = await response.json();
+                this.message = result.message;
+                if (response.status === 200) {
+                    setTimeout(() => {
+                        this.renderForm();
+                    }, 600)
+                }
+            } else {
+                return 0;
+            }
         },
 
         renderForm() {

@@ -23,6 +23,7 @@
                 />
             </div>
         </div>
+        
 </template>
 <script>
 import MenuItem from './MenuItem.vue';
