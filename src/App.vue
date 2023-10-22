@@ -6,6 +6,7 @@
         :logged="logged"
         :order="order"
         :username="username"
+        @account="userAccount = true"
         @pizzas="content = 'pizzas'"
         @desserts="content = 'desserts'"
         />
@@ -38,8 +39,22 @@
             v-model:show="createAccount"
             />
         </transition>
-
-        <MyOrder
+        <transition name="login-fade">
+            <UserAccount
+            v-model:show="userAccount"
+            :user="user"
+            @tryChangeAccount="tryChangeAccount"
+            @tryChangePass="ChangePass = true"
+            />
+        </transition>
+        <transition name="login-fade">
+            <ChangePass
+            v-model:show="ChangePass"
+            :user="user"
+            />
+        </transition>
+        <transition name="login-fade">
+            <MyOrder
         v-if="visibleORDER"
         @decrement="decrementOrder"
         @increment="incrementOrder"
@@ -48,6 +63,8 @@
         @renderOrder="visibleORDER = !visibleORDER"
         @orderDetails="orderDeatilsShow = true"
         />
+        </transition>
+        
         
         <OrderDeatils
         v-model:show="orderDeatilsShow"
@@ -66,21 +83,25 @@ import MyOrder from './components/MyOrder.vue';
 import CreateAccount from './components/CreateAccount.vue';
 import OrderDeatils from './components/OrderDeatils.vue';
 import Banner from './components/Banner.vue';
+import UserAccount from './components/UserAccount.vue';
+import ChangePass from './components/ChangePass.vue';
 export default {
     components: {
-        LoginForm, NavBar, Menu, MyOrder, CreateAccount, OrderDeatils, Banner
+        LoginForm, NavBar, Menu, MyOrder, CreateAccount, OrderDeatils, Banner, UserAccount, ChangePass
     },
     data() {
         return {
             visibleFORM: false,
             user: {
+                id: "",
+                username: "",
                 email: "",
                 name: "",
                 surname: "",
                 address: "",
                 phone: ""
             },
-            username: "My Order",
+            username: "Log In'",
             pizzas: [],
             desserts: [],
             order: {
@@ -91,6 +112,8 @@ export default {
             logged: false,
             createAccount: false,
             visibleORDER: false,
+            userAccount: false,
+            ChangePass: false,
             totalPrice: 0,
             orderDeatilsShow: false
         }
@@ -101,11 +124,14 @@ export default {
                 pizzas: [],
                 desserts: []
             } 
-          this.totalPrice = 0
+            this.totalPrice = 0
+          this.visibleORDER = false
         },
         setUser(user) {
             this.visibleFORM = false
             this.user = {
+                id: user.id,
+                username: user.username,
                 email: user.email,
                 name: user.name,
                 surname: user.surname,
@@ -214,6 +240,8 @@ export default {
                     }
                 }
             }
+        }, async tryChangeAccount(user) {
+            this.setUser(user);
         }
     },
     mounted() {

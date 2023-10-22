@@ -1,5 +1,5 @@
 <template>
-    <div v-if="show" @click.stop="renderForm" class="wrapper">
+    <Wrapper v-if="show" @click.stop="renderForm">
         <div @click.stop class="formContainer">
             <h2>Create Account</h2>
             <p>{{message}}</p>
@@ -11,24 +11,26 @@
                     <input type="text" :value="address" @change="address = $event.target.value" placeholder="Address">
                     <input type="text" :value="phone" @change="Numberchek($event.target.value)" placeholder="Phone Number">
                     <input type="text" :value="email" @change="email = $event.target.value" placeholder="E-mail">
-                    <input type="password" name="password" v-model="password" placeholder="Password"
-                        @input="validatePassword">
-                    <input type="password" name="repeatpassword" v-model="repeatpassword" placeholder="Repeat"
-                        @input="validatePassword2">
-                <button type="submit">Create Account</button>
+                    <input type="password" name="password" v-model="password" @input="validatePassword" placeholder="Password">
+                    <input type="password" name="repeatpassword" v-model="repeatpassword" @input="validatePassword"  placeholder="Repeat">
+                <button type="submit" :class="error ? 'disabled' : ''" :disabled="error">Create Account</button>
             </form>
         </div>
-    </div>
+    </Wrapper>
 </template>
 <script>
+import Wrapper from './Wrapper.vue';
+
 export default {
+    components: {
+        Wrapper
+    },
     props: {
         show: {
             type: Boolean,
             default: false
         }
     },
-
     data() {
         return {
             username: "",
@@ -41,72 +43,70 @@ export default {
             repeatpassword: "",
             message: "",
             error: false
-        }
+        };
     },
     methods: {
-        
         async validatePassword() {
             if (this.password.length < 8) {
-                this.message = "Password is too short"
-                this.error = true
+                this.message = "Password is too short";
+                this.error = true;
                 return 0;
             }
             let big = true;
             let number = true;
-            for (let i = 0; i < this.password.length; i++){
+            for (let i = 0; i < this.password.length; i++) {
                 if (Number(this.password[i])) {
                     number = false;
-                } else if(this.password[i] === this.password[i].toUpperCase()) {
+                }
+                else if (this.password[i] === this.password[i].toUpperCase()) {
                     big = false;
                 }
             }
             if (big) {
-                this.message = "Password does not include upper case character"
-                this.error = true
+                this.message = "Password does not include upper case character";
+                this.error = true;
                 return 0;
-
-            } else if(number) {
-                this.message = "Password does not include number"
-                this.error = true
-
+            }
+            else if (number) {
+                this.message = "Password does not include number";
+                this.error = true;
                 return 0;
-            } else {
-                this.message = ""
-                this.error = false
+            }
+            else {
+                this.message = "";
+                this.error = false;
+                this.validatePassword2();
                 return 0;
             }
         },
         async validatePassword2() {
             if (this.password !== this.repeatpassword) {
-                this.message = "Passwords do not match"
-                this.error = true
-
-            } else {
-                this.message = ""
-                this.error = false
-
+                this.message = "Passwords do not match";
+                this.error = true;
+            }
+            else {
+                this.message = "";
+                this.error = false;
             }
         }, Numberchek(phone) {
-            this.phone = phone
+            this.phone = phone;
             if (this.phone[0] === "+" || !isNaN(this.phone[0])) {
-                console.log('first chracter is okay')
+                console.log('first chracter is okay');
                 for (let i = 1; i < this.phone.length; i++) {
                     if (isNaN(this.phone[i])) {
                         this.message = "Not valid number";
-                        this.error = true
-
+                        this.error = true;
                         return 0;
                     }
                 }
-            } else {
+            }
+            else {
                 this.message = "Not valid number";
-                this.error = true
-
+                this.error = true;
                 return 0;
             }
             this.message = "";
-            this.error = false
-
+            this.error = false;
         },
         async tryCreateAccount() {
             if (!this.error) {
@@ -118,9 +118,9 @@ export default {
                     "address": this.address,
                     "phone": this.phone,
                     "password": this.password,
-                }
+                };
                 const jsonBody = JSON.stringify(body);
-                console.log(jsonBody)
+                console.log(jsonBody);
                 const response = await fetch("https://localhost:7043/user", {
                     method: 'POST',
                     headers: {
@@ -129,24 +129,34 @@ export default {
                     },
                     body: jsonBody,
                     cache: 'default'
-                })
+                });
                 const result = await response.json();
                 this.message = result.message;
                 if (response.status === 200) {
                     setTimeout(() => {
                         this.renderForm();
-                    }, 600)
+                    }, 600);
                 }
-            } else {
+            }
+            else {
                 return 0;
             }
         },
-
         renderForm() {
-            this.$emit('update:show', false)
+            this.$emit('update:show', false);
+            this.username = "",
+            this.email = "",
+            this.name = "",
+            this.surname = "",
+            this.address = "",
+            this.phone = "",
+            this.password = "",
+            this.repeatpassword = "",
+            this.message = "",
+            this.error = false
         }
-    }
-
+    },
+    components: { Wrapper }
 }
 </script>
 <style scoped>
@@ -211,6 +221,7 @@ form {
 
 form button {
     background-color: #d62828;
+    cursor: pointer;
     padding: 10px;
     color: white;
     font-weight: 600;
@@ -237,6 +248,12 @@ h2 {
     padding: 20px;
     text-align: center;
     margin: 0;
+}
+
+.disabled{
+    background-color: red;
+    color: aliceblue;
+    cursor: not-allowed;
 }
 
 

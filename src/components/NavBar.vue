@@ -17,7 +17,7 @@
                 </div>
             </div>
             <a v-if="!logged" href="" id="user" @click.prevent="this.$emit('login')">My Account</a>
-            <a v-else href="" @click.prevent id="user">{{username}}</a>
+            <a v-else href="" @click.prevent="this.$emit('account')" id="user">{{username}}</a>
         </nav>
     </transition>
 </template>
@@ -26,7 +26,7 @@ export default {
     props: {
         username: {
             type: String,
-            required: false
+            required: true
         }, logged :{
             type: Boolean,
             required: true

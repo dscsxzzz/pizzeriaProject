@@ -60,7 +60,7 @@ export default {
     }
   },
   data() {
-    return {
+    return{
       submitted: false,
       error: false,
       orderEmpty: false,
