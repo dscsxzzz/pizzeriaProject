@@ -50,14 +50,20 @@ export default {
             password: "",
             repeatpassword: "",
             message: "",
-            error: false
+            error: false,
+            errorPhone: false,
+            errorPass: false,
+            messagePassError: ""
         };
     },
     methods: {
         async validatePassword() {
+            
             if (this.password.length < 8) {
                 this.message = "Password is too short";
+                this.messagePassError = "Password is too short";
                 this.error = true;
+                this.errorPass = true;
                 return 0;
             }
             let big = true;
@@ -72,33 +78,46 @@ export default {
             }
             if (big) {
                 this.message = "Password does not include upper case character";
+                this.messagePassError = "Password does not include upper case character";
                 this.error = true;
+                this.errorPass = true;
+
                 return 0;
             }
             else if (number) {
                 this.message = "Password does not include number";
+                this.messagePassError = "Password does not include number";
+
                 this.error = true;
+                this.errorPass = true;
                 return 0;
             }
             else {
                 this.message = "";
                 this.error = false;
+                this.errorPass = false;
                 await this.validatePassword2();
-                this.Numberchek();
             }
         },
         async validatePassword2() {
             if (this.password !== this.repeatpassword) {
                 this.message = "Passwords do not match";
+                this.messagePassError = "Passwords do not match";
                 this.error = true;
-                return 0;
-
+                this.errorPass = true;
+                
             }
             else {
                 this.message = "";
                 this.error = false;
-                return 0;
+                this.errorPass = false;
+                
             }
+            if (this.errorPhone) {
+                this.message = "Not valid number";
+                this.error = true;
+            }
+
         }, Numberchek() {
             if (this.phone[0] === "+" || !isNaN(this.phone[0])) {
                 console.log('first chracter is okay');
@@ -106,6 +125,7 @@ export default {
                     if (isNaN(this.phone[i])) {
                         this.message = "Not valid number";
                         this.error = true;
+                        this.errorPhone = true;
                         return 0;
                     }
                 }
@@ -113,11 +133,16 @@ export default {
             else {
                 this.message = "Not valid number";
                 this.error = true;
+                this.errorPhone = true;
                 return 0;
             }
             this.message = "";
             this.error = false;
-            this.validatePassword();
+            this.errorPhone = false;
+            if (this.errorPass) {
+                this.message = this.messagePassError;
+                this.error = true;
+            }
         },
         async tryCreateAccount() {
             this.message = ""
