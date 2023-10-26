@@ -2,17 +2,25 @@
     <Wrapper v-if="show" @click.stop="renderForm">
         <div @click.stop class="formContainer">
             <h2>Create Account</h2>
-            <p>{{message}}</p>
             <form @submit.prevent="tryCreateAccount">
-                    <input type="text" name="login" :value="username" placeholder="Username"
-                        @change="username = $event.target.value">
-                    <input type="text" :value="name" @change="name = $event.target.value" placeholder="Name">
-                    <input type="text" :value="surname" @change="surname = $event.target.value" placeholder="Surname">
-                    <input type="text" :value="address" @change="address = $event.target.value" placeholder="Address">
-                    <input type="text" :value="phone" @change="Numberchek($event.target.value)" placeholder="Phone Number">
-                    <input type="text" :value="email" @change="email = $event.target.value" placeholder="E-mail">
-                    <input type="password" name="password" v-model="password" @input="validatePassword" placeholder="Password">
-                    <input type="password" name="repeatpassword" v-model="repeatpassword" @input="validatePassword"  placeholder="Repeat">
+                <label for="username">Username:</label>
+                <input type="text" name="username" :value="username" placeholder="Username"
+                @change="username = $event.target.value">
+                <label for="username">Name:</label>
+                <input type="text" name="name" :value="name" @change="name = $event.target.value" placeholder="Name">
+                <label for="username">Surname:</label>
+                <input type="text" name="surname" :value="surname" @change="surname = $event.target.value" placeholder="Surname">
+                <label for="username">Address:</label>
+                <input type="text" name="address" :value="address" @change="address = $event.target.value" placeholder="Address">
+                <label for="username">Phone Number:</label>
+                <input type="text" name="phonenumber" v-model="phone" @change="Numberchek" placeholder="Phone Number">
+                <label for="username">E-mail:</label>
+                <input type="text" name="email" :value="email" @change="email = $event.target.value" placeholder="E-mail">
+                <label for="username">Password:</label>
+                <input type="password"  name="password" v-model="password" @change="validatePassword" placeholder="Password">
+                <label for="username">Repeat Password:</label>
+                <input type="password" name="repeatpassword" v-model="repeatpassword" @input="validatePassword"  placeholder="Repeat Password">
+                <p>{{message}}</p>
                 <button type="submit" :class="error ? 'disabled' : ''" :disabled="error">Create Account</button>
             </form>
         </div>
@@ -75,21 +83,23 @@ export default {
             else {
                 this.message = "";
                 this.error = false;
-                this.validatePassword2();
-                return 0;
+                await this.validatePassword2();
+                this.Numberchek();
             }
         },
         async validatePassword2() {
             if (this.password !== this.repeatpassword) {
                 this.message = "Passwords do not match";
                 this.error = true;
+                return 0;
+
             }
             else {
                 this.message = "";
                 this.error = false;
+                return 0;
             }
-        }, Numberchek(phone) {
-            this.phone = phone;
+        }, Numberchek() {
             if (this.phone[0] === "+" || !isNaN(this.phone[0])) {
                 console.log('first chracter is okay');
                 for (let i = 1; i < this.phone.length; i++) {
@@ -107,8 +117,10 @@ export default {
             }
             this.message = "";
             this.error = false;
+            this.validatePassword();
         },
         async tryCreateAccount() {
+            this.message = ""
             if (!this.error) {
                 const body = {
                     "username": this.username,
@@ -136,7 +148,7 @@ export default {
                     setTimeout(() => {
                         this.renderForm();
                     }, 600);
-                }
+                } 
             }
             else {
                 return 0;
@@ -206,10 +218,16 @@ export default {
     height: max-content;
     padding: 1%;
     position: absolute;
-    background-color: #eae2b7;
+    background-color: #ffffff;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+
+p{
+    color: red;
+    text-align: center;
+    font-weight: 400;
 }
 
 form {
@@ -220,21 +238,14 @@ form {
 }
 
 form button {
-    background-color: #d62828;
+    background-color: rgb(218, 215, 213);
     cursor: pointer;
     padding: 10px;
-    color: white;
+    color: #000000;
     font-weight: 600;
+    border: none;
 }
 
-button{
-        border: none;
-        background-color: transparent;
-        color: blue;
-    }
-    button:hover{
-        cursor: pointer;
-    }
 
 input {
     padding: 11px;

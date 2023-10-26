@@ -135,8 +135,6 @@ export default {
 width: 90%;
 }
 .material-symbols-outlined {
-  background-color: rgb(218, 215, 213);
-  padding: 6.5px;
   font-variation-settings:
   'FILL' 0,
   'wght' 400,
@@ -186,9 +184,9 @@ form{
     
 }
 form button{
-    background-color: #e68028;
+    background-color: rgb(218, 215, 213);;
     padding: 10px;
-    color: white;
+    color: rgb(0, 0, 0);
     font-weight: 600;
 }
 .btns{
@@ -200,19 +198,20 @@ form button{
     button{
         border: none;
         background-color: transparent;
-        color: blue;
+        color: rgb(0, 0, 0);
     }
     button:hover{
         cursor: pointer;
     }
 input{
     padding: 10px;
-    background-color: #e68028;
-    color: white;
+    background-color: rgb(218, 215, 213);
+    
+    color: rgb(0, 0, 0);
     border: none;
   }
   input::placeholder{
-    color: white;
+    color: rgb(0, 0, 0);
     
 }
 h2{

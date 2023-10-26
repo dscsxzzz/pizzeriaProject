@@ -9,15 +9,9 @@
                         {{order.desserts.length + order.pizzas.length}}
                     </p>
             </div>
-            <div class="dropdown">
-                <button class="dropbtn">Menu</button>
-                 <div class="dropdown-content">
-                    <a @click.prevent="handleMenuChangeToPizza">Pizzas</a>
-                    <a @click.prevent="handleMenuChangeToDesserts">Desserts</a>
-                </div>
-            </div>
-            <a v-if="!logged" href="" id="user" @click.prevent="this.$emit('login')">My Account</a>
-            <a v-else href="" @click.prevent="this.$emit('account')" id="user">{{username}}</a>
+            
+            <h4 v-if="!logged" href="" id="user" @click.prevent="this.$emit('login')">My Account</h4>
+            <h4 v-else href="" @click.prevent="this.$emit('account')" id="user">{{username}}</h4>
         </nav>
     </transition>
 </template>
@@ -37,20 +31,6 @@ export default {
     }, data() {
         return {
             disabled: this.order.pizzas.length === 0 && this.order.desserts.length === 0
-        }
-    }, methods:{
-        handleMenuChangeToPizza() {
-            this.$emit('pizzas');
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth',
-            })
-        }, handleMenuChangeToDesserts() {
-            this.$emit('desserts');
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth',
-            })
         }
     }
     
@@ -122,48 +102,9 @@ nav{
 
 }
 
-.dropbtn {
-    background-color: #e68028;
-  padding: 16px;
-  font-size: 16px;
-  border: none;
-}
-
-.dropdown {
-  position: relative;
-  display: inline-block;
-}
-
-.dropdown-content {
-  display: none;
-  background-color: #ffffff;
-  position: absolute;
-  min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
-}
-
-.dropdown-content a {
-  color: black;
-  cursor: pointer;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-}
-
-.dropdown-content a:hover {background-color: #ddd;}
-
-.dropdown:hover .dropdown-content {display: block;}
-
-.dropdown:hover .dropbtn {background-color: #ffffff; color: black;}
-
-#user{
-    justify-self: flex-end;
-}
-
-a{
+h4{
     color: black;
     text-decoration: none;
-
+    cursor: pointer;
 }
 </style>

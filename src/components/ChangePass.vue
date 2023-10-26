@@ -1,11 +1,16 @@
 <template lang="">
     <Wrapper v-if="show" @click.stop="renderForm">
         <div @click.stop class="formContainer">
+            <div class="head">
+                <h2>Change Password</h2>
+                <button class="rndr" @click="renderForm">X</button>
+            </div>
             <h2>{{message}}</h2>
             <form @submit.prevent="tryChangePass">
                 <input type="password" name="password" v-model="password"  placeholder="Password">
                 <input type="password" name="password" v-model="newPassword" @input='validatePassword' placeholder="New Password">
                 <input type="password" name="repeatpassword" v-model="repeatPassword" @input='validatePassword' placeholder="Repeat New Password">
+                <p>{{messageForm}}</p>
                 <button type="submit" :class="error? 'disabled':'' " :disabled="error">Save Changes</button>
             </form>
         </div>
@@ -29,12 +34,20 @@ export default {
             password: "",
             newPassword: "",
             repeatPassword: "",
+            messageForm: "",
             message: "",
             error: false
         }
-    },methods:{
+    },
+    methods: {
         renderForm() {
             this.$emit('update:show', false)
+            this.password = ""
+            this.newPassword = ""
+            this.repeatPassword = ""
+            this.message = ""
+            this.messageForm = ""
+            this.error = false
         }, async tryChangePass() {
            
             const body = {
@@ -74,7 +87,10 @@ export default {
                     cache: 'default'
                 })
                 if (response.status === 204) {
-                    this.message="Success"
+                    this.message = "Success"
+                    setTimeout(() => {
+                        this.renderForm()
+                    }, 1000)
                 } else {
                     this.message = "Something went wrong"
                 }
@@ -83,7 +99,7 @@ export default {
             }
         }, async validatePassword() {
             if (this.newPassword.length < 8) {
-                this.message = "Password is too short";
+                this.messageForm = "Password is too short";
                 this.error = true;
                 return 0;
             }
@@ -98,17 +114,17 @@ export default {
                 }
             }
             if (big) {
-                this.message = "Password does not include upper case character";
+                this.messageForm = "Password does not include upper case character";
                 this.error = true;
                 return 0;
             }
             else if (number) {
-                this.message = "Password does not include number";
+                this.messageForm = "Password does not include number";
                 this.error = true;
                 return 0;
             }
             else {
-                this.message = "";
+                this.messageForm = "";
                 this.error = false;
                 this.validatePassword2();
                 return 0;
@@ -117,11 +133,11 @@ export default {
         },
         async validatePassword2() {
             if (this.newPassword !== this.repeatPassword) {
-                this.message = "Passwords do not match";
+                this.messageForm = "Passwords do not match";
                 this.error = true;
             }
             else {
-                this.message = "";
+                this.messageForm = "";
                 this.error = false;
             }
         }
@@ -129,12 +145,27 @@ export default {
 }
 </script>
 <style scoped>
+.head{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.rndr{
+    width: 20px;
+    height: 20px;
+    border: none;
+    background-color: #000000;
+    color: white;
+    cursor: pointer;
+}
     
 .formContainer{
     display: flex;
     flex-direction: column;
     justify-content: center;
-    width: 25%;
+    width: 30%;
     max-height: max-content;
     padding: 1%;
     position: absolute;
@@ -143,23 +174,95 @@ export default {
     left: 50%;
     transform: translate(-50%, -50%);
 }
-form{
+
+form {
     display: flex;
     flex-direction: column;
     padding: 20px;
-    margin-top: 10px;
-    
+
 }
-form button{
-    background-color: #e68028;
+
+form button {
+    background-color: rgb(218, 215, 213);
     cursor: pointer;
     padding: 10px;
-    color: white;
+    color: #000000;
     font-weight: 600;
+    border: none;
+    transition: all .5s;
+}
+
+
+
+input{
+    padding: 10px;
+    background-color: rgb(218, 215, 213);
+    margin-bottom: 5px;
+    color: rgb(0, 0, 0);
+    border: none;
+  }
+  input::placeholder{
+    color: rgb(0, 0, 0);
+    
+}
+
+p{
+    color: red;
+    text-align: center;
+    font-weight: 400;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+h2 {
+    font-weight: 900;
+    padding: 20px;
+    text-align: center;
+    margin: 0;
 }
 .disabled{
     background-color: red;
     color: aliceblue;
     cursor: not-allowed;
+}
+
+
+@media only screen and (max-width: 1200px) {
+    .formContainer {
+        width: 40%;
+    }
+}
+
+@media only screen and (max-width: 1200px) and (max-height: 601px) {
+    .formContainer {
+        width: 40%;
+    }
+}
+
+@media only screen and (max-width: 900px) and (orientation: portrait) {
+    .formContainer {
+        width: 50%;
+    }
+}
+
+@media only screen and (max-width: 550px) and (orientation: portrait) {
+    .formContainer {
+        width: 90%;
+    }
+}
+
+@media only screen and (max-width: 281px) and (orientation: portrait) {
+    .formContainer {
+
+        width: 100%;
+    }
+    
+}
+
+@media only screen and (max-width: 920px) and (orientation: landscape) {
+    .formContainer {
+
+        width: 410px;
+    }
 }
 </style>

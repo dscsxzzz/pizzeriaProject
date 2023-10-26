@@ -7,13 +7,29 @@
         :order="order"
         :username="username"
         @account="userAccount = true"
-        @pizzas="content = 'pizzas'"
-        @desserts="content = 'desserts'"
         />
     <transition name="menu-transition" appear>
 
         <div class="mainContainer">
             <Banner/>
+            <div class="chooseMenu">
+                <div class="chooser">
+                    <img 
+                        v-if="pizzas.length!=0" 
+                        :src="pizzas[1].img"
+                        @click.prevent="handleMenuChangeToPizza"
+                        alt="Pizzas">
+                    <h4>Pizzas</h4>
+                </div>
+                <div class="chooser">
+                    <img 
+                        v-if="desserts.length!=0" 
+                        :src="desserts[1].img" 
+                        @click.prevent="handleMenuChangeToDesserts"
+                        alt="Desserts">
+                    <h4>Desserts</h4>
+                </div>
+            </div>
             <Menu
             v-if="pizzas.length !== 0"
             :pizzas="pizzas"
@@ -150,7 +166,7 @@ export default {
             }
         },
         async getDesserts() {
-            const res = await fetch("/desserts.json")
+            const res = await fetch("https://localhost:7043/dessert")
             const desserts = await res.json()
             for (let i = 0; i < desserts.length; i++) {
                 this.desserts.push(desserts[i])
@@ -242,6 +258,18 @@ export default {
             }
         }, async tryChangeAccount(user) {
             this.setUser(user);
+        }, handleMenuChangeToPizza() {
+            this.content = "pizzas";
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth',
+            })
+        }, handleMenuChangeToDesserts() {
+            this.content = "desserts";
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth',
+            })
         }
     },
     mounted() {
@@ -252,6 +280,31 @@ export default {
 }
 </script>
 <style>
+
+.chooseMenu{
+    display: flex;
+    flex-direction: row;
+    width: 80%;
+    max-width: 300px;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+}
+
+.chooser img{
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 3px solid #e68028;
+    transition: all .5s;
+    cursor: pointer;
+
+}
+
+.chooser img:hover{
+    border: 3px solid rgb(255, 255, 255);
+    box-shadow: 0 0 10px rgba(0,0,0);
+}
 
 .menu-transition-enter-from,
 .menu-transition-leave-to{

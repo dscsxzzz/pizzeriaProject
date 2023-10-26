@@ -2,19 +2,28 @@
     <Wrapper v-if="show" @click.stop="renderForm">
         <div @click.stop class="formContainer">
             <h2>Account Info</h2>
-            <p>{{ message }}</p>
+            <h2 v-show="!error">{{ message }}</h2>
             <form @submit.prevent="tryChangeAccount">
-                <input type="text" name="login" :value="username" placeholder="Username"
+                <label for="username">Username:</label>
+                    <input type="text" name="username" :value="username" placeholder="Username"
                     @change="username = $event.target.value">
-                <input type="text" :value="name" @change="name = $event.target.value" placeholder="Name">
-                <input type="text" :value="surname" @change="surname = $event.target.value" placeholder="Surname">
-                <input type="text" :value="address" @change="address = $event.target.value" placeholder="Address">
-                <input type="text" :value="phone" @input="Numberchek($event.target.value)" placeholder="Phone Number">
-                <input type="text" :value="email" @change="email = $event.target.value" placeholder="E-mail">
+                    <label for="username">Name:</label>
+                    <input type="text" name="name" :value="name" @change="name = $event.target.value" placeholder="Name">
+                    <label for="username">Surname:</label>
+                    <input type="text" name="surname" :value="surname" @change="surname = $event.target.value" placeholder="Surname">
+                    <label for="username">Address:</label>
+                    <input type="text" name="address" :value="address" @change="address = $event.target.value" placeholder="Address">
+                    <label for="username">Phone Number:</label>
+                    <input type="text" name="phone" :value="phone" @change="Numberchek($event.target.value)" placeholder="Phone Number">
+                    <label for="username">E-mail:</label>
+                    <input type="text" name="email" :value="email" @change="email = $event.target.value" placeholder="E-mail">
+                    <p v-show="error">*{{ message }}</p>
                 <button type="submit" :class='error ? "disabled": ""'  :disabled="error">Save Changes</button>
             </form>
-            <button type="button" @click="this.$emit('tryChangePass')">Change Password</button>
-            <button type="submit"  @click="logOut">Log Out</button>
+            <div class="accountBtns">
+                <button type="button" @click="this.$emit('tryChangePass')">Change Password</button>
+                <button type="submit"  @click="logOut">Log Out</button>
+            </div>
         </div>
     </Wrapper>
 </template>
@@ -98,11 +107,12 @@ export default {
                     body: jsonBody,
                     cache: 'default'
                 })
-                if (response.status === 204) {
+                const res = await response.json();
+                if (response.status === 200) {
                     this.$emit('tryChangeAccount', user)
                     this.message = "Sucesss"
                 } else {
-                    this.message = "Something went wrong"
+                    this.message = res.message
                 }
             } else {
                 return 0;
@@ -126,36 +136,84 @@ export default {
 }
 </script>
 <style scoped>
+
     .formContainer{
     display: flex;
     flex-direction: column;
     justify-content: center;
     width: 25%;
     max-height: max-content;
-    padding: 1%;
+    padding: 2%;
     position: absolute;
     background-color: white;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+
+p{
+    color: red;
+    text-align: center;
+    font-weight: 400;
+}
+
+h2{
     text-align: center;
 }
 
-
-form{
+form {
     display: flex;
     flex-direction: column;
     padding: 20px;
-    margin-top: 10px;
+
+}
+
+form button {
+    background-color: rgb(218, 215, 213);
+    cursor: pointer;
+    padding: 10px;
+    color: #000000;
+    font-weight: 600;
+    border: none;
+    transition: all .5s;
+}
+
+form button:hover{
+    background-color: rgb(0, 0, 0);
+    color: #ffffff;
+}
+
+
+input{
+    padding: 10px;
+    background-color: rgb(218, 215, 213);
+    margin-bottom: 5px;
+    color: rgb(0, 0, 0);
+    border: none;
+  }
+  input::placeholder{
+    color: rgb(0, 0, 0);
     
 }
-form button{
-    background-color: #e68028;
-    cursor: pointer;
+
+.accountBtns{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.accountBtns button{
     border: none;
-    padding: 10px;
+    padding: 5px;
+    min-width: 150px;
+    cursor: pointer;
+    transition: all .5s;
+}
+
+.accountBtns button:hover{
     color: white;
-    font-weight: 600;
+    background-color: #000000;
 }
 
 .disabled{
@@ -163,17 +221,7 @@ form button{
     color: aliceblue;
     cursor: not-allowed;
 }
-input{
-    padding: 10px;
-    background-color: #e68028;
-    color: white;
-    border: none;
-    margin-bottom: 5px;
-  }
-  input::placeholder{
-    color: white;
-    
-}
+
 
 
 @media only screen and (max-width: 1200px) {
