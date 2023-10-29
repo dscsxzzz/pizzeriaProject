@@ -11,7 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity(name = "User")
-@Table(name="users")
+@Table(name = "users")
 @Data
 public class User implements UserDetails {
     @Id
@@ -26,14 +26,14 @@ public class User implements UserDetails {
     private String email;
     private String name;
     private String surname;
-    private String phoneNumber;
+    private String phone;
     private String address;
 
-    @ManyToMany(fetch=FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name="user_role_junction",
-            joinColumns = {@JoinColumn(name="user_id")},
-            inverseJoinColumns = {@JoinColumn(name="role_id")}
+            name = "user_role_junction",
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id")}
     )
     private Set<Role> authorities;
 
@@ -42,19 +42,19 @@ public class User implements UserDetails {
         authorities = new HashSet<>();
     }
 
-    public User(String username, String password, String email, String name, String surname, String phoneNumber, String address, Set<Role> authorities) {
+    public User(String username, String password, String email, String name, String surname, String phone, String address, Set<Role> authorities) {
         super();
         this.username = username;
         this.password = password;
         this.email = email;
         this.name = name;
         this.surname = surname;
-        this.phoneNumber = phoneNumber;
+        this.phone = phone;
         this.address = address;
         this.authorities = authorities;
     }
 
-    public User(Long id, String username, String password, String email, String name, String surname, String phoneNumber, String address, Set<Role> authorities) {
+    public User(Long id, String username, String password, String email, String name, String surname, String phone, String address, Set<Role> authorities) {
         super();
         this.id = id;
         this.username = username;
@@ -62,7 +62,7 @@ public class User implements UserDetails {
         this.email = email;
         this.name = name;
         this.surname = surname;
-        this.phoneNumber = phoneNumber;
+        this.phone = phone;
         this.address = address;
         this.authorities = authorities;
     }

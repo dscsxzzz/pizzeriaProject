@@ -36,7 +36,7 @@ public class AuthenticationService {
     @Autowired
     private TokenService tokenService;
 
-    public User registerUser(String username, String password, String email, String name, String surname, String phoneNumber, String address){
+    public User registerUser(String username, String password, String email, String name, String surname, String phone, String address) {
 
         String encodedPassword = passwordEncoder.encode(password);
         Role userRole = roleRepository.findByAuthority("USER").get();
@@ -45,12 +45,12 @@ public class AuthenticationService {
 
         authorities.add(userRole);
 
-        return userRepository.save(new User(username, encodedPassword, email, name, surname, phoneNumber, address, authorities));
+        return userRepository.save(new User(username, encodedPassword, email, name, surname, phone, address, authorities));
     }
 
-    public LoginResponseDTO loginUser(String username, String password){
+    public LoginResponseDTO loginUser(String username, String password) {
 
-        try{
+        try {
             Authentication auth = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(username, password)
             );
@@ -59,7 +59,7 @@ public class AuthenticationService {
 
             return new LoginResponseDTO(userRepository.findByUsername(username).get(), token);
 
-        } catch(AuthenticationException e){
+        } catch (AuthenticationException e) {
             return new LoginResponseDTO(null, "Counldnot login");
         }
     }
