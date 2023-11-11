@@ -1,27 +1,28 @@
 package com.pizzeriaproject.pizzeria.controllers;
 
-import com.pizzeriaproject.pizzeria.models.LoginResponseDTO;
 import com.pizzeriaproject.pizzeria.models.RegistrationDTO;
-import com.pizzeriaproject.pizzeria.models.User;
 import com.pizzeriaproject.pizzeria.services.AuthenticationService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/auth")
-@CrossOrigin("*")
+@RequestMapping(value = "/auth")
+@CrossOrigin(origins = "http://localhost:5173")
 public class AuthenticationController {
 
-    @Autowired
-    private AuthenticationService authenticationService;
+    private final AuthenticationService authenticationService;
+
+    public AuthenticationController(AuthenticationService authenticationService) {
+        this.authenticationService = authenticationService;
+    }
 
     @PostMapping("/register")
-    public User registerUser(@RequestBody RegistrationDTO body) {
+    public ResponseEntity<?> registerUser(@RequestBody RegistrationDTO body) {
         return authenticationService.registerUser(body.getUsername(), body.getPassword(), body.getEmail(), body.getName(), body.getSurname(), body.getPhone(), body.getAddress());
     }
 
-    @PostMapping("/login")
-    public LoginResponseDTO loginUser(@RequestBody RegistrationDTO body) {
+    @PostMapping(value = "/login")
+    public ResponseEntity<?> loginUser(@RequestBody RegistrationDTO body) {
         return authenticationService.loginUser(body.getUsername(), body.getPassword());
     }
 }

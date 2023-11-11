@@ -8,6 +8,13 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 public class LoginResponseDTO {
-    private User user;
-    private String jwt;
+    private Long id;
+    private String username;
+    private String password;
+    private String email;
+    private String name;
+    private String surname;
+    private String phone;
+    private String address;
+    //private String jwt;
 }

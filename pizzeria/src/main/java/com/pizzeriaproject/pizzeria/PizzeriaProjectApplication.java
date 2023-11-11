@@ -40,7 +40,7 @@ public class PizzeriaProjectApplication {
             Set<Role> roles = new HashSet<>();
             roles.add(adminRole);
 
-            User admin = new User(1L, "admin", passwordEncode.encode("adminpassw0rd"), "ostapnote2@gmail.com",
+            User admin = new User(1L, "admin", passwordEncode.encode("admin"), "ostapnote2@gmail.com",
                     "Ostap", "Zaba", "+48789697798", "Mikołajczyka 16", roles);
 
             userRepository.save(admin);

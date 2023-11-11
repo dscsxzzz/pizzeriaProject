@@ -24,8 +24,9 @@ public class User implements UserDetails {
     private String password;
     @Column(unique = true)
     private String email;
-    private String name;
     private String surname;
+    private String name;
+    @Column(unique = true)
     private String phone;
     private String address;
 
@@ -38,7 +39,6 @@ public class User implements UserDetails {
     private Set<Role> authorities;
 
     public User() {
-        super();
         authorities = new HashSet<>();
     }
 

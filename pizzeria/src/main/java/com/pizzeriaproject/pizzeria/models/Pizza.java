@@ -4,9 +4,6 @@ import com.pizzeriaproject.pizzeria.models.pizza.PizzaSizeAndCrust;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.List;
-import java.util.Map;
-
 @Entity(name = "Pizza")
 @Table(name = "pizzas")
 @Data
