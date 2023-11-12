@@ -1,45 +1,29 @@
 package com.pizzeriaproject.pizzeria.controllers;
 
-import com.pizzeriaproject.pizzeria.models.Dessert;
+import com.pizzeriaproject.pizzeria.models.ChangeUserDataDTO;
 import com.pizzeriaproject.pizzeria.models.OrderDTO;
-import com.pizzeriaproject.pizzeria.models.Pizza;
-import com.pizzeriaproject.pizzeria.services.DessertService;
 import com.pizzeriaproject.pizzeria.services.OrderService;
-import com.pizzeriaproject.pizzeria.services.PizzaService;
+import com.pizzeriaproject.pizzeria.services.UserService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/user")
 @CrossOrigin(origins = "http://localhost:5173")
 public class UserController {
 
-    private final PizzaService pizzaService;
-
-    private final DessertService dessertService;
-
     private final OrderService orderService;
 
-    public UserController(PizzaService pizzaService, DessertService dessertService, OrderService orderService) {
-        this.pizzaService = pizzaService;
-        this.dessertService = dessertService;
+    private final UserService userService;
+
+    public UserController(OrderService orderService, UserService userService) {
         this.orderService = orderService;
+        this.userService = userService;
     }
 
     @GetMapping("/")
     public String helloUserController() {
-        return "User acces level";
-    }
-
-    @GetMapping("/pizzas")
-    public List<Pizza> pizzaList() {
-        return pizzaService.allPizzas();
-    }
-
-    @GetMapping("/desserts")
-    public List<Dessert> dessertList() {
-        return dessertService.allDesserts();
+        return "User access level";
     }
 
     //TODO change return type to ResponseEntity
@@ -49,11 +33,14 @@ public class UserController {
         return new OrderDTO(body.getPersonId(), body.getPizzaList(), body.getDessertList());
     }
 
+    // TODO Change user details
+    @PutMapping("/change-user-info/{id}")
+    public ResponseEntity<?> changeUserInformation(@RequestBody ChangeUserDataDTO body, @PathVariable Long id) {
+        return userService.changeUserDetails(body.getId(), body.getUsername(), body.getPassword(), body.getEmail(), body.getName(), body.getSurname(), body.getPhone(), body.getAddress());
+    }
+
     // TODO Change password
     // @PutMapping("/change-pass/{id}")
     // public
 
-    // TODO Change user details
-    // @PutMapping("/change-user-info/{id}")
-    //
 }

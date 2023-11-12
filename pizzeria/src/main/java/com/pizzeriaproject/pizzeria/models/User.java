@@ -1,6 +1,5 @@
 package com.pizzeriaproject.pizzeria.models;
 
-
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
@@ -24,8 +23,8 @@ public class User implements UserDetails {
     private String password;
     @Column(unique = true)
     private String email;
-    private String surname;
     private String name;
+    private String surname;
     @Column(unique = true)
     private String phone;
     private String address;
