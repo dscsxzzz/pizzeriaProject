@@ -2,9 +2,8 @@ package com.pizzeriaproject.pizzeria.services;
 
 import com.pizzeriaproject.pizzeria.models.User;
 import com.pizzeriaproject.pizzeria.repository.UserRepository;
-import com.pizzeriaproject.pizzeria.utils.GlobalExceptionHandler;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -15,16 +14,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService implements UserDetailsService {
 
-    private final PasswordEncoder encoder;
+    private final PasswordEncoder passwordEncoder;
 
     private final UserRepository userRepository;
 
-    private final GlobalExceptionHandler globalExceptionHandler;
-
-    public UserService(PasswordEncoder encoder, UserRepository userRepository, GlobalExceptionHandler globalExceptionHandler) {
-        this.encoder = encoder;
+    public UserService(PasswordEncoder passwordEncoder, UserRepository userRepository) {
+        this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
-        this.globalExceptionHandler = globalExceptionHandler;
     }
 
     @Override
@@ -35,7 +31,7 @@ public class UserService implements UserDetailsService {
         return userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User is not found"));
     }
 
-    public ResponseEntity<?> changeUserDetails(Long id, String username, String password, String email, String name, String surname, String phone, String address) {
+    public ResponseEntity<?> changeUserDetails(Long id, String username, String email, String name, String surname, String phone, String address) {
 
         User user = userRepository.findById(id).map(
                 user1 -> {
@@ -65,8 +61,18 @@ public class UserService implements UserDetailsService {
                     user1.setAddress(address);
                     return userRepository.save(user1);
                 }
-        ).orElseThrow(() -> new DuplicateKeyException("User not found!"));
+        ).orElseThrow(() -> new RuntimeException("User not found!"));
 
         return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    public ResponseEntity<?> changePassword(Long id, String password) {
+        User user = userRepository.findById(id).map(
+                user1 -> {
+                    user1.setPassword(passwordEncoder.encode(password));
+                    return userRepository.save(user1);
+                }
+        ).orElseThrow(() -> new RuntimeException("User not found!"));
+        return new ResponseEntity<>(user, HttpStatusCode.valueOf(204));
     }
 }

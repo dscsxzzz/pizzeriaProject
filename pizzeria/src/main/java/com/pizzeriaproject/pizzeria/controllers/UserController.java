@@ -33,14 +33,13 @@ public class UserController {
         return new OrderDTO(body.getPersonId(), body.getPizzaList(), body.getDessertList());
     }
 
-    // TODO Change user details
     @PutMapping("/change-user-info/{id}")
     public ResponseEntity<?> changeUserInformation(@RequestBody ChangeUserDataDTO body, @PathVariable Long id) {
-        return userService.changeUserDetails(body.getId(), body.getUsername(), body.getPassword(), body.getEmail(), body.getName(), body.getSurname(), body.getPhone(), body.getAddress());
+        return userService.changeUserDetails(id, body.getUsername(), body.getEmail(), body.getName(), body.getSurname(), body.getPhone(), body.getAddress());
     }
 
-    // TODO Change password
-    // @PutMapping("/change-pass/{id}")
-    // public
-
+    @PutMapping("/change-pass/{id}")
+    public ResponseEntity<?> changeUserPassword(@RequestBody ChangeUserDataDTO body, @PathVariable Long id) {
+        return userService.changePassword(id, body.getPassword());
+    }
 }
