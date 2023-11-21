@@ -8,8 +8,8 @@ import com.pizzeriaproject.pizzeria.repository.UserRepository;
 import com.pizzeriaproject.pizzeria.utils.GlobalExceptionHandler;
 import jakarta.transaction.Transactional;
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -35,20 +35,25 @@ public class AuthenticationService {
 
     private final TokenService tokenService;
 
+    private final EmailService emailService;
+
+    private final CodeService codeService;
+
     private final GlobalExceptionHandler globalExceptionHandler;
 
-    public AuthenticationService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, TokenService tokenService, GlobalExceptionHandler globalExceptionHandler) {
+    public AuthenticationService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, TokenService tokenService, EmailService emailService, CodeService codeService, GlobalExceptionHandler globalExceptionHandler) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.tokenService = tokenService;
+        this.emailService = emailService;
+        this.codeService = codeService;
         this.globalExceptionHandler = globalExceptionHandler;
     }
 
     public ResponseEntity<?> registerUser(String username, String password, String email, String name, String surname, String phone, String address) {
         try {
-            //Temporary UGLY decision of validation of data
             if (userRepository.findByUsername(username).isPresent()) {
                 throw new DuplicateKeyException("The username " + username + " is taken! Please, try another one.");
             } else if (userRepository.existsByEmail(email)) {
@@ -83,13 +88,33 @@ public class AuthenticationService {
             String token = tokenService.generateJwt(auth);
             User user = userRepository.findByUsername(username).get();
             LoginResponseDTO loginResponseDTO = new LoginResponseDTO(user.getId(), username, user.getPassword(), user.getEmail(), user.getName(), user.getSurname(), user.getPhone(), user.getAddress());
-            HttpHeaders responseHeaders = new HttpHeaders();
-            responseHeaders.set("New-User-login", "user-{" + username + "} logged in");
-            return new ResponseEntity<>(loginResponseDTO, responseHeaders, HttpStatus.OK);
+            return new ResponseEntity<>(loginResponseDTO, HttpStatus.OK);
 
         } catch (AuthenticationException e) {
             // TODO logging
             System.out.println(e.getMessage() + " " + username);
+            return globalExceptionHandler.handleAllExceptions(e);
+        }
+    }
+
+    public ResponseEntity<?> forgotPassword(String username) {
+        try {
+            User user = userRepository.findByUsername(username).get();
+            emailService.sendHtmlMessage(user.getEmail(), "Password Reset Request", codeService.generateCode());
+            return new ResponseEntity<>("Email sent", HttpStatusCode.valueOf(250));
+        } catch (Exception ex) {
+            return globalExceptionHandler.handleAllExceptions(ex);
+        }
+    }
+
+    public ResponseEntity<?> checkCode(String code) {
+        try {
+            if (codeService.isCodeValid(code)) {
+                return new ResponseEntity<>("The code is valid", HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("The code is expired", HttpStatusCode.valueOf(401));
+            }
+        } catch (Exception e) {
             return globalExceptionHandler.handleAllExceptions(e);
         }
     }

@@ -25,4 +25,14 @@ public class AuthenticationController {
     public ResponseEntity<?> loginUser(@RequestBody RegistrationDTO body) {
         return authenticationService.loginUser(body.getUsername(), body.getPassword());
     }
+    
+    @PostMapping(value = "/forgot-password/{username}")
+    public ResponseEntity<?> forgotPasswordUser(@PathVariable String username) {
+        return authenticationService.forgotPassword(username);
+    }
+
+    @PostMapping(value = "/forgot-password-code/{code}")
+    public ResponseEntity<?> forgotPasswordCodeUser(@PathVariable String code) throws Exception {
+        return authenticationService.checkCode(code);
+    }
 }

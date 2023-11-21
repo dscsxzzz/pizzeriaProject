@@ -13,3 +13,21 @@ spring:
         format_sql: true
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+  mail:
+    host: smtp.gmail.com
+    username: ostapnote2@gmail.com
+    password:
+    port: 587
+    protocol: smtp
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  freemarker:
+    cache: false # for development, set to true in production
+    check-template-location: true
+    content-type: text/html
+    encoding: UTF-8
+    suffix: .ftl
