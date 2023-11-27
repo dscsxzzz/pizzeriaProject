@@ -1,6 +1,5 @@
 package com.pizzeriaproject.pizzeria.models;
 
-import com.pizzeriaproject.pizzeria.models.pizza.PizzaSizeAndCrust;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -17,32 +16,34 @@ public class Pizza {
     private boolean veg;
     private double price;
     private String description;
-    private int quantity;
     private String img;
-    @Embedded
-    private PizzaSizeAndCrust sizeandcrust;
+    private int mediumPan;
+    private int mediumstuffedcrustcheesemax;
+    private int mediumstuffedcrustvegkebab;
 
     public Pizza() {
     }
 
-    public Pizza(Long id, String name, boolean veg, double price, String description, int quantity, String img, PizzaSizeAndCrust sizeandcrust) {
+    public Pizza(Long id, String name, boolean veg, double price, String description, String img, int mediumPan, int mediumstuffedcrustcheesemax, int mediumstuffedcrustvegkebab) {
         this.id = id;
         this.name = name;
         this.veg = veg;
         this.price = price;
         this.description = description;
-        this.quantity = quantity;
         this.img = img;
-        this.sizeandcrust = sizeandcrust;
+        this.mediumPan = mediumPan;
+        this.mediumstuffedcrustcheesemax = mediumstuffedcrustcheesemax;
+        this.mediumstuffedcrustvegkebab = mediumstuffedcrustvegkebab;
     }
 
-    public Pizza(String name, boolean veg, double price, String description, int quantity, String img, PizzaSizeAndCrust sizeandcrust) {
+    public Pizza(String name, boolean veg, double price, String description, String img, int mediumPan, int mediumstuffedcrustcheesemax, int mediumstuffedcrustvegkebab) {
         this.name = name;
         this.veg = veg;
         this.price = price;
         this.description = description;
-        this.quantity = quantity;
         this.img = img;
-        this.sizeandcrust = sizeandcrust;
+        this.mediumPan = mediumPan;
+        this.mediumstuffedcrustcheesemax = mediumstuffedcrustcheesemax;
+        this.mediumstuffedcrustvegkebab = mediumstuffedcrustvegkebab;
     }
 }
