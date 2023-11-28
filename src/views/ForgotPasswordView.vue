@@ -1,6 +1,6 @@
 <template>
     <transition name="login-fade" appear>
-        <Wrapper>
+        <Wrapper @click.stop="$router.push('/login')">
             <div @click.stop class="formContainer">
                 <div class="head">
                     <h2>Change Password</h2>
