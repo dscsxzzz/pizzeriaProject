@@ -6,7 +6,7 @@
                     <h2>Change Password</h2>
                     <button class="rndr" @click="$router.push('/login')">X</button>
                 </div>
-                <transition name="loading-fade">
+                <transition name="loading-fade" appear>
                     <div v-if="store.logging" class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
                   </transition>
                 <router-view/>

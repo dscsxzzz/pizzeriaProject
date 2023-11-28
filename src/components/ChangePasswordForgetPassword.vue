@@ -11,12 +11,15 @@
 </template>
 <script>
 import { store } from '../store/store';
+import baseUrl from '../config.json';
+import router from '../router';
 export default {
     data() {
         return {
             store,
             error: false,
-            message: ""
+            message: "",
+            router
         }
     },
     methods: {
@@ -42,7 +45,7 @@ export default {
 
                 setTimeout(() => {
                     router.push("/login")
-                }, 1000)
+                }, 2000)
             }
             this.message = result.message
             store.logging = false;
@@ -92,7 +95,7 @@ export default {
     }
 }
 </script>
-<style>
+<style scoped>
     
 form {
     display: flex;
