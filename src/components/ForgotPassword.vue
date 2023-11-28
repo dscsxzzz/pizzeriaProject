@@ -30,7 +30,7 @@
 </template>
 <script>
 import Wrapper from "./Wrapper.vue";
-import { baseUrl } from "../config.json";
+import baseUrl from "../config.json";
 import { store } from "../store/store";
 import router from "../router"
 export default {
@@ -53,8 +53,16 @@ export default {
         }
     }, methods: {
         async tryGetCode(){
-            const response = await fetch(`${baseUrl.baseUrl}/auth/forgot-password/${this.username}`);
-            const result = response.json()
+            const response = await fetch(`${baseUrl.baseUrl}/auth/forgot-password/${this.username}`, {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                cache: 'default'
+            });
+            const result = await response.json()
+            console.log(result);
             if (response.status === 200) {
                 this.message = result.message,
                 this.id = result.id
@@ -63,14 +71,33 @@ export default {
 
 
         }, async tryConfirmCode() {
-            const response = await fetch(`${baseUrl.baseUrl}/auth/forgot-password-code/${this.code}`);
-            const result = response.json()
+            const response = await fetch(`${baseUrl.baseUrl}/auth/forgot-password-code/${this.code}`, {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                cache: 'default'
+            });
+            const result = await response.json()
 
             if (response.status === 200) this.message = result.message
 
         }, async tryChangePass() {
-            const response = await fetch(`${baseUrl.baseUrl}/user/change-pass/${this.id}`);
-            const result = response.json()
+            const jsonBody = JSON.stringify({
+                username: this.username,
+                password: this.newPassword
+            })
+            const response = await fetch(`${baseUrl.baseUrl}/user/change-pass/${this.id}`, {
+                method: 'PUT',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: jsonBody,
+                cache: 'default'
+            });
+            const result = await response.json()
             if (response.status === 200) {
                 this.message = result.message
                 setTimeout(() => {

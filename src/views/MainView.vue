@@ -64,7 +64,7 @@ export default {
     methods: {
         
         async getPizzas() {
-            const res = await fetch(`${baseUrl.baseUrl}/pizza`)
+            const res = await fetch(`${baseUrl.baseUrl}/pizzas`)
             const pizzas = await res.json()
             console.log(pizzas)
             for (let i = 0; i < pizzas.length; i++) {
@@ -73,7 +73,7 @@ export default {
             this.originalPizzas = pizzas;
         },
         async getDesserts() {
-            const res = await fetch(`${baseUrl.baseUrl}/dessert`)
+            const res = await fetch(`${baseUrl.baseUrl}/desserts`)
             const desserts = await res.json()
             for (let i = 0; i < desserts.length; i++) {
                 this.desserts.push(desserts[i])

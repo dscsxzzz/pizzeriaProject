@@ -101,10 +101,10 @@ export default {
                 }
                 console.log(user)
                 const jsonBody = JSON.stringify(user)
-                const response = await fetch(`${ baseUrl.baseUrl }/user/${store.user.id}`, {
+                const response = await fetch(`${ baseUrl.baseUrl }/user/change-user-info/${store.user.id}`, {
                     method: 'PUT',
                     headers: {
-                        Accept: 'application.json',
+                        Accept: 'application/json',
                         'Content-Type': 'application/json'
                     },
                     body: jsonBody,

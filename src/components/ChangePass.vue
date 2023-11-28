@@ -51,7 +51,7 @@ export default {
             const response1 = await fetch(`${baseUrl.baseUrl}/login`, {
                 method: 'POST',
                 headers: {
-                    Accept: 'application.json',
+                    Accept: 'application/json',
                     'Content-Type': 'application/json'
                 },
                 body: jsonBody1,
@@ -69,10 +69,10 @@ export default {
                     password: this.newPassword
                 }
                 const jsonBody = JSON.stringify(user)
-                const response = await fetch(`${ baseUrl.baseUrl }/login/${user.id}`, {
+                const response = await fetch(`${ baseUrl.baseUrl }/change-user-info/${user.id}`, {
                     method: 'PUT',
                     headers: {
-                        Accept: 'application.json',
+                        Accept: 'application/json',
                         'Content-Type': 'application/json'
                     },
                     body: jsonBody,
