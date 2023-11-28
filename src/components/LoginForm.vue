@@ -208,10 +208,13 @@ form button{
 }
     button{
         border: none;
-        background-color: transparent;
+        background-color: rgb(218, 215, 213);
         color: rgb(0, 0, 0);
+        transition: all 0.5s;
     }
     button:hover{
+      background-color: black;
+      color: antiquewhite;
         cursor: pointer;
     }
 input{

@@ -24,6 +24,19 @@ import NavBar from './components/NavBar.vue';
 import MyFooter from './components/MyFooter.vue';
 import ForgotPassword from './components/ForgotPassword.vue';
 import { store } from './store/store';
+import router from './router';
+
+function isLoggedIn() {
+    return store.logged
+}
+
+router.beforeEach((to, from) => {
+    if (to.meta.requiresAuth && !isLoggedIn()) {
+        return {
+            path: '/',
+        }
+    }
+})
 export default {
     components: {
         MyOrder, OrderDeatils, NavBar, MyFooter, ForgotPassword

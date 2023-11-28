@@ -1,22 +1,18 @@
 <template>
     <transition name="login-fade" appear>
-        <form v-if="!gotCode" @submit.prevent="tryGetCode">
-            <h2>{{message}}</h2>
-            <input type="text" name="username" v-model="username"  placeholder="Username">
-            <button type="submit">Send Me Email</button>
-            <button type="button" @click="gotCode = true">I have code</button>
-        </form>
-        <form v-else @submit.prevent="tryConfirmCode">
-            <h2>{{ message }}</h2>
-
-            <input type="text" name="Code" v-model="code"  placeholder="Code">
-            <button type="submit">Send Code</button>
-            <button type="button" @click="gotCode = false">I do not have code</button>
-        </form>
+        <Wrapper>
+            <div @click.stop class="formContainer">
+                <div class="head">
+                    <h2>Change Password</h2>
+                    <button class="rndr" @click="$router.push('/login')">X</button>
+                </div>
+                <router-view/>
+            </div>
+        </Wrapper>
     </transition>
 </template>
 <script>
-import Wrapper from "./Wrapper.vue";
+import Wrapper from "../components/Wrapper.vue";
 import baseUrl from "../config.json";
 import { store } from "../store/store";
 import router from "../router"
@@ -27,15 +23,19 @@ export default {
     data() {
         return {
             username: "",
+            id: undefined,
             gotCode: false,
             canChangePassword: false,
+            newPassword: "",
+            repeatPassword: "",
             message: "",
             code: "",
+            error: false,
             store,
             router,
         }
     }, methods: {
-        async tryGetCode(){
+        async tryGetCode() {
             const response = await fetch(`${baseUrl.baseUrl}/auth/forgot-password/${this.username}`, {
                 method: 'POST',
                 headers: {
@@ -48,8 +48,7 @@ export default {
             console.log(result);
             if (response.status === 200) {
                 this.message = result.message,
-                this.gotCode = true
-                store.user.id = result.id
+                    store.user.id = result.id
             }
             else this.message = "Something went wrong, try one more time"
 
@@ -64,18 +63,15 @@ export default {
                 cache: 'default'
             });
             const result = await response.json()
-            if (response.status === 200) {
-                this.message = result.message
-                router.push("/forgot-password/change-password")
-            }
 
-        }, 
+            if (response.status === 200) this.message = result.message
+
+        },
     }
 }
 </script>
 <style scoped>
-
-.head{
+.head {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -83,8 +79,8 @@ export default {
     width: 90%;
 }
 
-    
-.formContainer{
+
+.formContainer {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -119,7 +115,7 @@ form button {
 
 
 
-.rndr{
+.rndr {
     width: 20px;
     height: 20px;
     border: 1px solid black;
@@ -131,24 +127,26 @@ form button {
     transition: all .5s;
 }
 
-form button:hover, .rndr:hover{
+form button:hover,
+.rndr:hover {
     background-color: #000000;
     color: antiquewhite;
 }
 
-input{
+input {
     padding: 10px;
     background-color: rgb(218, 215, 213);
     margin-bottom: 5px;
     color: rgb(0, 0, 0);
     border: none;
-  }
-  input::placeholder{
-    color: rgb(0, 0, 0);
-    
 }
 
-.disabled{
+input::placeholder {
+    color: rgb(0, 0, 0);
+
+}
+
+.disabled {
     background-color: red;
     color: aliceblue;
     cursor: not-allowed;
@@ -161,7 +159,7 @@ h2 {
     margin: 0;
 }
 
-p{
+p {
     color: red;
     text-align: center;
     font-weight: 400;

@@ -23,6 +23,20 @@ import Wrapper from './Wrapper.vue';
 import { store } from '../store/store';
 import router from '../router';
 import baseUrl from '../config.json'
+
+function isLoggedIn() {
+    return store.logged
+}
+
+
+router.beforeEach((to, from) => {
+    if (to.meta.requiresAuth && !isLoggedIn()) {
+        return {
+            path: '/',
+        }
+    }
+})
+
 export default {
     components: {
         Wrapper

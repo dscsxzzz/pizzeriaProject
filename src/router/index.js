@@ -18,14 +18,31 @@ const routes = [
     },
     ,
     {
-        path: "/forgot-password",
-        component: () => import ("../components/ForgotPassword.vue"),
-        name: "ForgotPassword"
+        path: "/forgot-password/",
+        component: () => import ("../views/ForgotPasswordView.vue"),
+        name: "ForgotPassword",
+        children: [
+            {
+                path: "",
+                component: () => import ("../components/ForgotPassword.vue"),
+                name: "forgotPasswordMenu",
+                
+            },
+            {
+                path: "change-password",
+                component: () => import ("../components/ChangePasswordForgetPassword.vue"),
+                name: "changePasswordForgetPassword",
+                
+            }
+        ]
     },
     {
         path: "/details",
         component: () => import ("../views/UserAccountView.vue"),
         name: "UserAccountView",
+        meta: {
+            requiresAuth: true
+        },
         children: [
             {
                 path: "account",
@@ -48,7 +65,10 @@ const routes = [
     {
         path: "/changePass",
         component: () => import("../components/ChangePass.vue"),
-        name : "changePass"
+        name: "changePass",
+        meta: {
+            requiresAuth: true
+        }
     }
         
 ]
