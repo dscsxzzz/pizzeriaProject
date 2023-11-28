@@ -192,6 +192,7 @@ form{
     flex-direction: column;
     padding: 20px;
     margin-top: 10px;
+    width: 100%;
     
 }
 form button{

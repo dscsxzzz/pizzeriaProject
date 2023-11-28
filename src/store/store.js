@@ -18,6 +18,7 @@ export const store = reactive({
     },
     logged: false,
     totalPrice: 0,
+    logging: false,
     addToCart(pizza, amount,price, size, type) {
             for (let i = 0; i < this.order.pizzas.length; i++) {
                 if (this.order.pizzas[i].pizza.name === pizza.name) {

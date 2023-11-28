@@ -1,14 +1,15 @@
 <template>
     <transition name="login-fade" appear>
         <form v-if="!gotCode" @submit.prevent="tryGetCode">
+            
             <h2>{{message}}</h2>
             <input type="text" name="username" v-model="username"  placeholder="Username">
             <button type="submit">Send Me Email</button>
             <button type="button" @click="gotCode = true">I have code</button>
         </form>
         <form v-else @submit.prevent="tryConfirmCode">
+            
             <h2>{{ message }}</h2>
-
             <input type="text" name="Code" v-model="code"  placeholder="Code">
             <button type="submit">Send Code</button>
             <button type="button" @click="gotCode = false">I do not have code</button>
@@ -35,7 +36,8 @@ export default {
             router,
         }
     }, methods: {
-        async tryGetCode(){
+        async tryGetCode() {
+            store.logging = true;
             const response = await fetch(`${baseUrl.baseUrl}/auth/forgot-password/${this.username}`, {
                 method: 'POST',
                 headers: {
@@ -48,13 +50,16 @@ export default {
             console.log(result);
             if (response.status === 200) {
                 this.message = result.message,
-                this.gotCode = true
+                this.gotCode = true,
                 store.user.id = result.id
             }
             else this.message = "Something went wrong, try one more time"
+            store.logging = false
+
 
 
         }, async tryConfirmCode() {
+            store.logging = true;
             const response = await fetch(`${baseUrl.baseUrl}/auth/forgot-password-code/${this.code}`, {
                 method: 'POST',
                 headers: {
@@ -66,8 +71,12 @@ export default {
             const result = await response.json()
             if (response.status === 200) {
                 this.message = result.message
-                router.push("/forgot-password/change-password")
+                setTimeout(() => {
+                    store.logging = false
+                    router.push("/forgot-password/change-password")
+                }, 500)
             }
+
 
         }, 
     }

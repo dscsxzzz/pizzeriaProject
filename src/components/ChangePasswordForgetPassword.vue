@@ -10,15 +10,18 @@
     </transition>
 </template>
 <script>
+import { store } from '../store/store';
 export default {
     data() {
         return {
+            store,
             error: false,
             message: ""
         }
     },
     methods: {
         async tryChangePass() {
+            store.logging = true;
             const jsonBody = JSON.stringify({
                 username: this.username,
                 password: this.newPassword
@@ -35,14 +38,14 @@ export default {
             const result = await response.json()
             if (response.status === 200) {
                 this.message = result.message
+                store.logging = false;
+
                 setTimeout(() => {
                     router.push("/login")
                 }, 1000)
             }
             this.message = result.message
-
-
-
+            store.logging = false;
         }, async validatePassword() {
             if (this.newPassword.length < 8) {
                 this.messageForm = "Password is too short";
