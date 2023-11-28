@@ -1,54 +1,58 @@
 <template>
-  <Wrapper v-if="show" @click.stop="renderForm">
-    <div @click.stop class="formContainer" >
-        <h2>User Login</h2>
-        <transition name="loading-fade">
-          <div v-if="logging" class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+  <transition name="login-fade" appear>
+    <Wrapper @click.stop="$router.push('/')">
+      <div @click.stop class="formContainer" >
+          <h2>User Login</h2>
+          <transition name="loading-fade">
+            <div v-if="logging" class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+          </transition>
+        <transition  name="loading-fade">
+          <transition name="loading-fade" v-if="logged">
+              <h2 v-if="logged2" >Welcome, {{ username }}!</h2>
+              <h2 v-else >Incorrect password or username!</h2>
+          </transition>
         </transition>
-      <transition  name="loading-fade">
-        <transition name="loading-fade" v-if="logged">
-            <h2 v-if="logged2" >Welcome, {{ username }}!</h2>
-            <h2 v-else >Incorrect password or username!</h2>
-        </transition>
-      </transition>
-        <form @submit.prevent="tryLogin">
-          <div class="loginHolder">
-            <span class="material-symbols-outlined">
-              login
-            </span>
-            <input 
-              type="text"
-              name="login" 
-              :value="username" 
-              id="" 
-              placeholder="Login"
-              @change="username = $event.target.value"
-            >
+          <form @submit.prevent="tryLogin">
+            <div class="loginHolder">
+              <span class="material-symbols-outlined">
+                login
+              </span>
+              <input 
+                type="text"
+                name="login" 
+                :value="username" 
+                id="" 
+                placeholder="Login"
+                @change="username = $event.target.value"
+              >
+            </div>
+            <div class="loginHolder">
+              <span class="material-symbols-outlined">
+                password
+              </span>
+              <input type="password" 
+               name="password"
+               :value="password"
+               placeholder="Password"
+               @change="password = $event.target.value"
+              >
+            </div>
+              <button type="submit">Log In</button>
+          </form>
+          <div class="btns">
+              <button @click="$router.push('/forgot-password')" class="formDialogBtn"> Forgot password?</button>
+              <button @click="$router.push('/register')" class="formDialogBtn"> Create account</button>
           </div>
-          <div class="loginHolder">
-            <span class="material-symbols-outlined">
-              password
-            </span>
-            <input type="password" 
-             name="password"
-             :value="password"
-             placeholder="Password"
-             @change="password = $event.target.value"
-            >
-          </div>
-            <button type="submit">Log In</button>
-        </form>
-        <div class="btns">
-            <button @click="this.$emit('forgotPassword')" class="formDialogBtn"> Forgot password?</button>
-            <button @click="this.$emit('createAccount')" class="formDialogBtn"> Create account</button>
-        </div>
-    </div>
-  </Wrapper>
+      </div>
+    </Wrapper>
+  </transition>
 
 </template>
 <script>
 import Wrapper from './Wrapper.vue';
-
+import router from '../router';
+import { store } from '../store/store';
+import baseUrl from '../config.json'
 export default {
   components: {
     Wrapper
@@ -59,27 +63,27 @@ export default {
       default: false
     }
   },
-    
-    data() {
-        return {
-            username: "",
-          password: "",
-            logged2: false,
+  data() {
+    return {
+      router,
+      username: "",
+      password: "",
+      logged2: false,
+      logging: false,
       logged: false,
-      logging: false
-        }
+      store
+    }
   },
-  
-    methods: {
-      async tryLogin() {
-        this.logging = true
-        const body = {
-          "username": this.username,
-          "password" : this.password
-        }
-        const jsonBody = JSON.stringify(body);
-        console.log(jsonBody)
-      const response = await fetch("https://localhost:7043/login", {
+  methods: {
+    async tryLogin() {
+      this.logging = true
+      const body = {
+        "username": this.username,
+        "password" : this.password
+      }
+      const jsonBody = JSON.stringify(body);
+      console.log(jsonBody)
+      const response = await fetch(`${baseUrl.baseUrl}/login`, {
         method: 'POST',
         headers: {
           Accept: 'application.json',
@@ -88,23 +92,24 @@ export default {
         body: jsonBody,
         cache: 'default'
       })
-        const user = await response.json()
+      const user = await response.json()
       console.log(user)
-        if (response.status === 200) {
-          setTimeout(() => {
-            this.logging = false;
-          }, 650)
-          
-            this.logged2 = true;
-            setTimeout(() => {
-              this.logged = true
-            }, 1500)
-            setTimeout(() => {
-              this.$emit("logged", user)
-            }, 2500)
+      if (response.status === 200) {
+        setTimeout(() => {
+          this.logging = false;
+        }, 650)
+        this.logged2 = true;
+        setTimeout(() => {
+          this.logged = true
+        }, 1500)
+        setTimeout(() => {
+          store.user = user
+          store.logged = true
+          router.push("/")
+        }, 2500)
       }
-        else {
-      setTimeout(() => {
+      else {
+        setTimeout(() => {
           this.logging = false;
         }, 650)
         setTimeout(() => {
@@ -114,16 +119,22 @@ export default {
           this.logged = false
         }, 2500)
       }
-      }, renderForm() { 
-        this.username = ""
-        this.password = ""
-        this.$emit('update:show', false)
-      }
     }
-    
+  }
+  
 }
 </script>
 <style scoped>
+
+.login-fade-enter-active,
+.login-fade-leave-active {
+  transition: opacity 0.8s ease-in-out;
+}
+
+.login-fade-enter-from,
+.login-fade-leave-to {
+  opacity: 0;
+}
 .loginHolder{
   display: flex;
   flex-direction: row;

@@ -1,34 +1,36 @@
 <template>
-    <Wrapper v-if="show" @click.stop="renderForm">
-        <div @click.stop class="formContainer">
-            <h2>Create Account</h2>
-            <form @submit.prevent="tryCreateAccount">
-                <label for="username">Username:</label>
-                <input type="text" name="username" :value="username" placeholder="Username"
-                @change="username = $event.target.value">
-                <label for="username">Name:</label>
-                <input type="text" name="name" :value="name" @change="name = $event.target.value" placeholder="Name">
-                <label for="username">Surname:</label>
-                <input type="text" name="surname" :value="surname" @change="surname = $event.target.value" placeholder="Surname">
-                <label for="username">Address:</label>
-                <input type="text" name="address" :value="address" @change="address = $event.target.value" placeholder="Address">
-                <label for="username">Phone Number:</label>
-                <input type="text" name="phonenumber" v-model="phone" @change="Numberchek" placeholder="Phone Number">
-                <label for="username">E-mail:</label>
-                <input type="text" name="email" :value="email" @change="email = $event.target.value" placeholder="E-mail">
-                <label for="username">Password:</label>
-                <input type="password"  name="password" v-model="password" @change="validatePassword" placeholder="Password">
-                <label for="username">Repeat Password:</label>
-                <input type="password" name="repeatpassword" v-model="repeatpassword" @input="validatePassword"  placeholder="Repeat Password">
-                <p>{{message}}</p>
-                <button type="submit" :class="error ? 'disabled' : ''" :disabled="error">Create Account</button>
-            </form>
-        </div>
-    </Wrapper>
+    <transition name="login-fade">
+            <div @click.stop class="formContainer">
+                <h2>Create Account</h2>
+                <form @submit.prevent="tryCreateAccount">
+                    <label for="username">Username:</label>
+                    <input type="text" name="username" :value="username" placeholder="Username"
+                    @change="username = $event.target.value">
+                    <label for="username">Name:</label>
+                    <input type="text" name="name" :value="name" @change="name = $event.target.value" placeholder="Name">
+                    <label for="username">Surname:</label>
+                    <input type="text" name="surname" :value="surname" @change="surname = $event.target.value" placeholder="Surname">
+                    <label for="username">Address:</label>
+                    <input type="text" name="address" :value="address" @change="address = $event.target.value" placeholder="Address">
+                    <label for="username">Phone Number:</label>
+                    <input type="text" name="phonenumber" v-model="phone" @change="Numberchek" placeholder="Phone Number">
+                    <label for="username">E-mail:</label>
+                    <input type="text" name="email" :value="email" @change="email = $event.target.value" placeholder="E-mail">
+                    <label for="username">Password:</label>
+                    <input type="password"  name="password" v-model="password" @change="validatePassword" placeholder="Password">
+                    <label for="username">Repeat Password:</label>
+                    <input type="password" name="repeatpassword" v-model="repeatpassword" @input="validatePassword"  placeholder="Repeat Password">
+                    <p>{{message}}</p>
+                    <button type="submit" :class="error ? 'disabled' : ''" :disabled="error">Create Account</button>
+                </form>
+            </div>
+    </transition>
 </template>
 <script>
+import { store } from '../store/store';
 import Wrapper from './Wrapper.vue';
-
+import router from '../router';
+import baseUrl from '../config.json'
 export default {
     components: {
         Wrapper
@@ -41,6 +43,7 @@ export default {
     },
     data() {
         return {
+            router,
             username: "",
             email: "",
             name: "",
@@ -53,7 +56,8 @@ export default {
             error: false,
             errorPhone: false,
             errorPass: false,
-            messagePassError: ""
+            messagePassError: "",
+            store
         };
     },
     methods: {
@@ -158,7 +162,7 @@ export default {
                 };
                 const jsonBody = JSON.stringify(body);
                 console.log(jsonBody);
-                const response = await fetch("https://localhost:7043/user", {
+                const response = await fetch(`${baseUrl.baseUrl}/user`, {
                     method: 'POST',
                     headers: {
                         Accept: 'application.json',
@@ -171,6 +175,13 @@ export default {
                 this.message = result.message;
                 if (response.status === 200) {
                     setTimeout(() => {
+                        store.user.id        = this.id ,
+                        store.user.username  = this.username ,
+                        store.user.email     = this.email,
+                        store.user.name      = this.name,
+                        store.user.surname   = this.surname,
+                        store.user.address   = this.address,
+                        store.user.phone     = this.phone
                         this.renderForm();
                     }, 600);
                 } 
@@ -180,23 +191,23 @@ export default {
             }
         },
         renderForm() {
-            this.$emit('update:show', false);
-            this.username = "",
-            this.email = "",
-            this.name = "",
-            this.surname = "",
-            this.address = "",
-            this.phone = "",
-            this.password = "",
-            this.repeatpassword = "",
-            this.message = "",
-            this.error = false
+            router.push("/login")
         }
     },
     components: { Wrapper }
 }
 </script>
 <style scoped>
+
+.login-fade-enter-active,
+.login-fade-leave-active {
+  transition: opacity 0.8s ease-in-out;
+}
+
+.login-fade-enter-from,
+.login-fade-leave-to {
+  opacity: 0;
+}
 .loginHolder {
     display: flex;
     flex-direction: row;
@@ -240,6 +251,7 @@ export default {
     flex-direction: column;
     justify-content: center;
     width: 25%;
+    margin-top: 60px;
     height: max-content;
     padding: 1%;
     position: absolute;

@@ -1,6 +1,5 @@
 <template>
-    <transition name="loading-fade">
-    <Wrapper v-if="show" @click.stop="renderOrder">
+    <Wrapper @click.stop="renderOrder">
             <div @click.stop class="order">
               <div class="head">
                 <h2>Input Details</h2>
@@ -35,12 +34,14 @@
                 <button @click="Check" :disabled="error" >Submit Order</button>
             </div>
         </Wrapper>
-    </transition>
+
 </template>
 
 <script >
 import Wrapper from './Wrapper.vue';
 import { Email } from "../smtp.js";
+import { store } from '../store/store';
+import baseUrl from '../config.json'
 export default {
     components: {
         Wrapper
@@ -49,32 +50,25 @@ export default {
     show: {
       type: Boolean,
       required: true
-    },
-    order: {
-      type: Object
-    }, totalPrice: {
-      type: Number
-    }, user: {
-      type: Object,
-      required: false
     }
   },
   data() {
-    return{
+    return {
+      store,
       submitted: false,
       error: false,
       orderEmpty: false,
-      email: this.user.email,
-      name: this.user.name,
-      surname: this.user.surname,
-      address: this.user.address,
+      email: store.user.email,
+      name: store.user.name,
+      surname: store.user.surname,
+      address: store.user.address,
       details: "",
-      phone: this.user.phone
+      phone: store.user.phone
       }
     }
     , methods: {
         renderOrder() {
-            this.$emit("update:show", false)
+            store.orderDetails = false
       }, animation() {
         const animatedBox = document.getElementById("orderSUBMITTED");
         animatedBox.style.display = "block";
@@ -101,39 +95,46 @@ export default {
           return 0;
         }
         this.error = false;
-      }, Check() {
-        if (this.order.pizzas.length !== 0 || this.order.desserts.length !== 0) {
+      }, async Check() {
+        if (store.order.pizzas.length !== 0 || this.store.desserts.length !== 0) {
           if (this.name !== "") {
             if (this.surname !== "") {
               if (this.address !== "") {
                 if (this.phone !== "") {
                   if (this.email !== "") {
-                    Email.send({
-                      Host: "smtp.elasticemail.com",
-                      Username: "krechuniak.a@gmail.com",
-                      Password: "B383CBC5AE75DFD0D580C8B628280B9A7228",
-                      To: this.email,
-                      From: "krechuniak.a@gmail.com",
-                      Subject: "Your Order ",
-                      Body: `This is your order, ${this.name} ${this.surname}, to address ${this,this.address}: ${this.order.pizzas.length !== 0 ? this.order.pizzas.map((element) => {
-                        return `${element.pizza.name}, ${element.size}, ${element.price * 40} UAH, ${element.amount}. position price: ${element.price * element.amount * 40} UAH \n`
-                      }) : ''}\n ${this.order.desserts.length !== 0 ? this.order.desserts.map((element) => {
-                        return `${element.dessert.name}, ${element.price * 40} UAH, ${element.amount}.position price: ${element.price * element.amount * 40
-                          } UAH \n`
-                      }) : ''}Total Price ${this.totalPrice * 40}UAH
-              \nThanks for Choosing us!
-              `
-                    }).then(
-                    this.animation(),
-                    this.submitted = true
-                  );
-                  setTimeout(() => {
-                    this.submitted = false;
-                  }, 3000)
-                  setTimeout(() => {
-                    this.$emit("update:show", false)
-                    this.$emit("cleanOrder")
-                  }, 3000)
+                    if (this.error !== true) {
+                      Email.send({
+                        Host: "smtp.elasticemail.com",
+                        Username: "krechuniak.a@gmail.com",
+                        Password: "B383CBC5AE75DFD0D580C8B628280B9A7228",
+                        To: this.email,
+                        From: "krechuniak.a@gmail.com",
+                        Subject: "Your Order ",
+                        Body: `This is your order, ${this.name} ${this.surname}, to address ${this.address}: ${store.order.pizzas.length !== 0 ? store.order.pizzas.map((element) => {
+                          return `${element.pizza.name}, ${element.size}, ${element.price * 40} UAH, ${element.amount}. position price: ${element.price * element.amount * 40} UAH \n`
+                        }) : ''}\n ${store.order.desserts.length !== 0 ? store.order.desserts.map((element) => {
+                          return `${element.dessert.name}, ${element.price * 40} UAH, ${element.amount}.position price: ${element.price * element.amount * 40
+                            } UAH \n`
+                        }) : ''}Total Price ${store.totalPrice * 40}UAH
+                \nThanks for Choosing us!
+                `
+                      }).then(
+                      await this.PostOrderToServer(),
+                      this.animation(),
+                      this.submitted = true
+                      );
+                      setTimeout(() => {
+                        this.submitted = false;
+                      }, 3000)
+                      setTimeout(() => {
+                        store.orderSideBar = false
+                      }, 2000)
+                      setTimeout(() => {
+                        store.orderDetails = false
+                        this.$emit("cleanOrder")
+                      }, 1200)
+                      
+                    }
                   } else {
                       this.error = true;
                       console.log("Problem in email")
@@ -180,10 +181,24 @@ export default {
           this.orderEmpty = false;
         }, 2000)
         }
+      }, async PostOrderToServer() {
+        
+      const jsonBody = JSON.stringify(store.order);
+      console.log(jsonBody)
+      const response = await fetch(`${ baseUrl.baseUrl }/Order/${store.user.id}`, {
+        method: 'POST',
+        headers: {
+          Accept: 'application.json',
+          'Content-Type': 'application/json'
+        },
+        body: jsonBody,
+        cache: 'default'
+      })
+        return response;
       }
   }
   , watch: {
-    user: {
+    "store.user": {
       handler(newUser) {
         this.email = newUser ? newUser.email : '';
         this.name = newUser ? newUser.name : '';
@@ -292,7 +307,7 @@ export default {
     }
     input{
         border: none;
-        background-color: #e68128ef;
+        background-color: #d6d4d3ef;
         color: black;
         margin-bottom:20px;
         padding: 10px;
@@ -306,12 +321,15 @@ export default {
         background-color: #e68128;
         box-shadow: 0 10px 40px rgba(0,0,0,0.03);
     padding: 10px;
-    color: black;
+    color: rgb(255, 255, 255);
     font-weight: 500;
     border: none;
+    transition: all 0.2s ease-in;
     }
     button:hover{
         cursor: pointer;
+      background-color: black;
+
     }
 
     @media only screen and (max-width: 1200px) {

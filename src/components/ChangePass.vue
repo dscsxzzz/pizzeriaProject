@@ -1,36 +1,34 @@
 <template lang="">
-    <Wrapper v-if="show" @click.stop="renderForm">
-        <div @click.stop class="formContainer">
-            <div class="head">
-                <h2>Change Password</h2>
-                <button class="rndr" @click="renderForm">X</button>
+    <transition name="login-fade">
+        <Wrapper @click.stop="renderForm">
+            <div @click.stop class="formContainer">
+                <div class="head">
+                    <h2>Change Password</h2>
+                    <button class="rndr" @click="renderForm">X</button>
+                </div>
+                <h2>{{message}}</h2>
+                <form @submit.prevent="tryChangePass">
+                    <input type="password" name="password" v-model="password"  placeholder="Password">
+                    <input type="password" name="password" v-model="newPassword" @input='validatePassword' placeholder="New Password">
+                    <input type="password" name="repeatpassword" v-model="repeatPassword" @input='validatePassword' placeholder="Repeat New Password">
+                    <p>{{messageForm}}</p>
+                    <button type="submit" :class="error? 'disabled':'' " :disabled="error">Save Changes</button>
+                </form>
             </div>
-            <h2>{{message}}</h2>
-            <form @submit.prevent="tryChangePass">
-                <input type="password" name="password" v-model="password"  placeholder="Password">
-                <input type="password" name="password" v-model="newPassword" @input='validatePassword' placeholder="New Password">
-                <input type="password" name="repeatpassword" v-model="repeatPassword" @input='validatePassword' placeholder="Repeat New Password">
-                <p>{{messageForm}}</p>
-                <button type="submit" :class="error? 'disabled':'' " :disabled="error">Save Changes</button>
-            </form>
-        </div>
-    </Wrapper>
+        </Wrapper>
+    </transition>
 </template>
 <script>
 import Wrapper from './Wrapper.vue';
+import { store } from '../store/store';
+import router from '../router';
+import baseUrl from '../config.json'
 export default {
     components: {
         Wrapper
-    }, props: {
-        show: {
-            type: Boolean,
-            required: true
-        }, user: {
-            type: Object,
-            required: true
-        }
     }, data() {
         return {
+            store,
             password: "",
             newPassword: "",
             repeatPassword: "",
@@ -41,22 +39,16 @@ export default {
     },
     methods: {
         renderForm() {
-            this.$emit('update:show', false)
-            this.password = ""
-            this.newPassword = ""
-            this.repeatPassword = ""
-            this.message = ""
-            this.messageForm = ""
-            this.error = false
+            router.push("/")
         }, async tryChangePass() {
            
             const body = {
-                "username": this.user.username,
+                "username": store.user.username,
                 "password": this.password
             }
             const jsonBody1 = JSON.stringify(body);
             console.log(jsonBody1)
-            const response1 = await fetch("https://localhost:7043/login", {
+            const response1 = await fetch(`${baseUrl.baseUrl}/login`, {
                 method: 'POST',
                 headers: {
                     Accept: 'application.json',
@@ -67,17 +59,17 @@ export default {
             })
             if (response1.status === 200) {
                 const user = {
-                    id: this.user.id,
-                    username: this.user.username,
-                    email: this.user.email,
-                    name: this.user.name,
-                    surname: this.user.surname,
-                    address: this.user.address,
-                    phone: this.user.phone,
+                    id: store.user.id,
+                    username: store.user.username,
+                    email: store.user.email,
+                    name: store.user.name,
+                    surname: store.user.surname,
+                    address: store.user.address,
+                    phone: store.user.phone,
                     password: this.newPassword
                 }
                 const jsonBody = JSON.stringify(user)
-                const response = await fetch(`https://localhost:7043/login/${user.id}`, {
+                const response = await fetch(`${ baseUrl.baseUrl }/login/${user.id}`, {
                     method: 'PUT',
                     headers: {
                         Accept: 'application.json',
@@ -145,6 +137,15 @@ export default {
 }
 </script>
 <style scoped>
+.login-fade-enter-active,
+.login-fade-leave-active {
+  transition: opacity 0.8s ease-in-out;
+}
+
+.login-fade-enter-from,
+.login-fade-leave-to {
+  opacity: 0;
+}
 .head{
     display: flex;
     flex-direction: row;

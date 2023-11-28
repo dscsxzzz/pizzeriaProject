@@ -6,11 +6,11 @@
             <p>{{ dessert.description }}</p>
             <img :src="dessert.img" class="box" :id="dessert.id" alt="">
             <div class="buy">
-                <h3>{{ price * 40 }} UAH</h3>
+                <h3>{{ price * this.amount * 40 }} UAH</h3>
                 <div class="counter">
                     <button @click="decrement">-</button>
                     <p>{{ amount }}</p>
-                    <button @click="amount += 1">+</button>
+                    <button @click="increment">+</button>
                     <button @click="animation">Buy</button>
                 </div>
             </div>
@@ -20,13 +20,15 @@
     </div>
 </template>
 <script scoped>
+import { store } from '../store/store';
 export default {
 
     data() {
         return {
             price: this.dessert.price,
             show: false,
-            amount: 1
+            amount: 1,
+            store
         }
     },
     props: {
@@ -39,6 +41,10 @@ export default {
             if (this.amount - 1 !== 0) {
                 this.amount -= 1
             }
+        }, increment() {
+            if (this.amount < 10) {
+                this.amount += 1
+            }
         }, animation() {
             const animatedBox = document.getElementById(this.dessert.id);
             animatedBox.style.display = "block";
@@ -48,7 +54,7 @@ export default {
                 animatedBox.style.display = "none";
                 animatedBox.classList.remove("animated");
             });
-            this.$emit('addToCartDessert', this.dessert, this.amount, this.price, 'dessert');
+            store.addToCartDessert(this.dessert, this.amount, this.price, "dessert");
             this.amount = 1
         }
     }

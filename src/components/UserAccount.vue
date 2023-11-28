@@ -1,71 +1,58 @@
 <template>
-    <Wrapper v-if="show" @click.stop="renderForm">
-        <div @click.stop class="formContainer">
-            <h2>Account Info</h2>
-            <h2 v-show="!error">{{ message }}</h2>
-            <form @submit.prevent="tryChangeAccount">
-                <label for="username">Username:</label>
-                    <input type="text" name="username" :value="username" placeholder="Username"
-                    @change="username = $event.target.value">
-                    <label for="username">Name:</label>
-                    <input type="text" name="name" :value="name" @change="name = $event.target.value" placeholder="Name">
-                    <label for="username">Surname:</label>
-                    <input type="text" name="surname" :value="surname" @change="surname = $event.target.value" placeholder="Surname">
-                    <label for="username">Address:</label>
-                    <input type="text" name="address" :value="address" @change="address = $event.target.value" placeholder="Address">
-                    <label for="username">Phone Number:</label>
-                    <input type="text" name="phone" :value="phone" @change="Numberchek($event.target.value)" placeholder="Phone Number">
-                    <label for="username">E-mail:</label>
-                    <input type="text" name="email" :value="email" @change="email = $event.target.value" placeholder="E-mail">
-                    <p v-show="error">*{{ message }}</p>
-                <button type="submit" :class='error ? "disabled": ""'  :disabled="error">Save Changes</button>
-            </form>
-            <div class="accountBtns">
-                <button type="button" @click="this.$emit('tryChangePass')">Change Password</button>
-                <button type="submit"  @click="logOut">Log Out</button>
-            </div>
+<transition name="login-fade">
+    <div class="UserAccount">
+        <h2>Account Info</h2>
+        <h2 v-show="!error">{{ message }}</h2>
+        <form @submit.prevent="tryChangeAccount">
+            <label for="username">Username:</label>
+            <input type="text" name="username" :value="username" placeholder="Username"
+            @change="username = $event.target.value">
+            <label for="name">Name:</label>
+            <input type="text" name="name" :value="name" @change="name = $event.target.value" placeholder="Name">
+            <label for="surname">Surname:</label>
+            <input type="text" name="surname" :value="surname" @change="surname = $event.target.value" placeholder="Surname">
+            <label for="address">Address:</label>
+            <input type="text" name="address" :value="address" @change="address = $event.target.value" placeholder="Address">
+            <label for="phone">Phone Number:</label>
+            <input type="text" name="phone" :value="phone" @change="Numberchek($event.target.value)" placeholder="Phone Number">
+            <label for="email">E-mail:</label>
+            <input type="text" name="email" :value="email" @change="email = $event.target.value" placeholder="E-mail">
+            <p v-show="error">*{{ message }}</p>
+            <button type="submit" :class='error ? "disabled": ""'  :disabled="error">Save Changes</button>
+        </form>
+        <div class="accountBtns">
+            <button type="button" @click="router.push('/changePass')">Change Password</button>
+            <button type="submit"  @click="logOut">Log Out</button>
         </div>
-    </Wrapper>
+    </div>
+</transition>
+
 </template>
 <script>
-import Wrapper from './Wrapper.vue';
-
+import PrevOrder from './PrevOrder.vue';
+import { store } from '../store/store';
+import router from '../router';
+import baseUrl from '../config.json'
 export default {
-    components: { Wrapper },
-    props: {
-        user: {
-            type: Object,
-            required: true
-        }, show : {
-            type: Boolean,
-            required: true
-        }
-    },
+    components: { PrevOrder},
+    
     data() {
         return {
+            store,
+            router,
             error: false,
             message: "",
-            id: this.user.id,
-            username: this.user.username,
-            email: this.user.email,
-            name: this.user.name,
-            surname: this.user.surname,
-            address: this.user.address,
-            phone: this.user.phone
+            id: store.user.id,
+            username: store.user.username,
+            email: store.user.email,
+            name: store.user.name,
+            surname: store.user.surname,
+            address: store.user.address,
+            phone: store.user.phone,
         }
     },
     methods: {
-        renderForm() {
-            this.$emit('update:show', false)
-             this.username = this.user.username,
-                this.email = this.user.email,
-                this.name = this.user.name,
-                this.surname = this.user.surname,
-                this.address = this.user.address,
-                this.phone = this.user.phone,
-                this.message = "",
-                this.error = false
-        }, Numberchek(phone) {
+         Numberchek(phone) {
             this.phone = phone;
             if (this.phone[0] === "+" || !isNaN(this.phone[0])) {
                 console.log('first chracter is okay');
@@ -85,7 +72,22 @@ export default {
             this.message = "";
             this.error = false;
         }, logOut() {
-            location.reload()
+            store.order = {
+                pizzas: [],
+                desserts: []
+            },
+            store.totalPrice= 0,
+            store.user= {
+                id: "",
+                username: "",
+                email: "",
+                name: "",
+                surname: "",
+                address: "",
+                phone: ""
+                }
+            store.logged = false
+            router.push("/")
         }, async tryChangeAccount() {
             if (!this.error) {
                 const user = {
@@ -97,8 +99,9 @@ export default {
                     address: this.address,
                     phone: this.phone
                 }
+                console.log(user)
                 const jsonBody = JSON.stringify(user)
-                const response = await fetch(`https://localhost:7043/user/${user.id}`, {
+                const response = await fetch(`${ baseUrl.baseUrl }/user/${store.user.id}`, {
                     method: 'PUT',
                     headers: {
                         Accept: 'application.json',
@@ -109,7 +112,7 @@ export default {
                 })
                 const res = await response.json();
                 if (response.status === 200) {
-                    this.$emit('tryChangeAccount', user)
+                    store.user = user
                     this.message = "Sucesss"
                 } else {
                     this.message = res.message
@@ -117,9 +120,11 @@ export default {
             } else {
                 return 0;
             }
-            }
+        }
+        
+        
     }, watch: {
-        user: {
+        "store.user": {
             handler(newUser) {
                 this.id = newUser ? newUser.id : '';
                 this.username = newUser ? newUser.username : '';
@@ -136,19 +141,14 @@ export default {
 }
 </script>
 <style scoped>
+.login-fade-enter-active,
+.login-fade-leave-active {
+  transition: opacity 0.8s ease-in-out;
+}
 
-    .formContainer{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    width: 25%;
-    max-height: max-content;
-    padding: 2%;
-    position: absolute;
-    background-color: white;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+.login-fade-enter-from,
+.login-fade-leave-to {
+  opacity: 0;
 }
 
 p{
@@ -164,8 +164,8 @@ h2{
 form {
     display: flex;
     flex-direction: column;
+    flex-wrap: wrap;
     padding: 20px;
-
 }
 
 form button {
@@ -192,7 +192,7 @@ input{
     border: none;
   }
   input::placeholder{
-    color: rgb(0, 0, 0);
+    color: rgb(0, 0, 0, 0.5);
     
 }
 
@@ -206,6 +206,7 @@ input{
 .accountBtns button{
     border: none;
     padding: 5px;
+    margin-left: 5px;
     min-width: 150px;
     cursor: pointer;
     transition: all .5s;
@@ -222,41 +223,4 @@ input{
     cursor: not-allowed;
 }
 
-
-
-@media only screen and (max-width: 1200px) {
-  .formContainer {
-    width: 40%;
-  }
-}
-@media only screen and (max-width: 1200px) and (max-height: 601px)  {
-  .formContainer {
-    width: 40%;
-  }
-}
-
-@media only screen and (max-width: 900px) and (orientation: portrait)  {
-  .formContainer {
-    width: 50%;
-  }
-}
-
-@media only screen and (max-width: 550px) and (orientation: portrait)  {
-  .formContainer {
-    width: 90%;
-  }
-}
-
-@media only screen and (max-width: 281px) and (orientation: portrait) {
-  .formContainer {
-    
-    width: 100%;
-  }
-}
-@media only screen and (max-width: 920px) and (orientation: landscape) {
-  .formContainer {
-    
-    width: 410px;
-  }
-}
 </style>

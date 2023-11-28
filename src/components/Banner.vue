@@ -93,16 +93,16 @@ align-items: center;
 .slider-enter-active,
 .slider-leave-active {
     transition: all 1s ease-in;
-    position: relative;
+    position: absolute;
 }
 
 .slider-enter-from{
-transform: translateX(-2000px);
+transform: translateX(2000px);
   opacity: 0
 
 }
 .slider-leave-to {
-  transform: translateX(2000px);
+  transform: translateX(-2000px);
   opacity: 0
 
 }
@@ -117,5 +117,84 @@ transform: translateX(-2000px);
 p{
     cursor: pointer;
     
+}
+
+
+@media only screen and (max-width: 1200px) {
+  .slider-enter-from{
+transform: translateX(1500px);
+  opacity: 0
+
+}
+.slider-leave-to {
+  transform: translateX(-1500px);
+  opacity: 0
+
+}
+}
+@media only screen and (max-width: 1200px) and (max-height: 601px)  {
+  .slider-enter-from{
+transform: translateX(1500px);
+  opacity: 0
+
+}
+.slider-leave-to {
+  transform: translateX(-1500px);
+  opacity: 0
+
+}
+}
+
+@media only screen and (max-width: 900px) and (orientation: portrait)  {
+    .slider-enter-from{
+transform: translateX(1000px);
+  opacity: 0
+
+}
+.slider-leave-to {
+  transform: translateX(-1000px);
+  opacity: 0
+
+}
+}
+
+@media only screen and (max-width: 550px) and (orientation: portrait)  {
+    .slider-enter-from{
+transform: translateX(700px);
+  opacity: 0
+
+}
+.slider-leave-to {
+  transform: translateX(-700px);
+  opacity: 0
+
+}
+  
+}
+
+@media only screen and (max-width: 281px) and (orientation: portrait) {
+    .slider-enter-from{
+transform: translateX(400px);
+  opacity: 0
+
+}
+.slider-leave-to {
+  transform: translateX(-400px);
+  opacity: 0
+
+}
+  
+}
+@media only screen and (max-width: 920px) and (orientation: landscape) {
+ .slider-enter-from{
+transform: translateX(1000px);
+  opacity: 0
+
+}
+.slider-leave-to {
+  transform: translateX(-1000px);
+  opacity: 0
+
+}
 }
 </style>

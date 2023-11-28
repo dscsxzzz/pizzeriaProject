@@ -9,12 +9,15 @@
                 <p @click="toggleCheese" :class="choice ? '' : 'choice'" class="p2">cheese max</p>
             </div>
             <img :src="pizza.img" class="box" :id="pizza.id" alt="">
+            <span v-if="pizza.veg" class="material-symbols-rounded">
+            eco
+            </span>
             <div class="buy">
                 <h3>{{ price * 40 * amount}} UAH</h3>
                 <div class="counter">
                     <button @click="decrement">-</button>
                     <p>{{amount}}</p>
-                    <button @click="amount += 1">+</button>
+                    <button @click="increment">+</button>
                     <button @click="animation">Buy</button>
                 </div>
             </div>
@@ -24,6 +27,7 @@
     </div>
 </template>
 <script scoped>
+import {store} from "../store/store.js"
 export default {
     
     data() {
@@ -32,7 +36,8 @@ export default {
             size: "normal",
             price: this.pizza.price,
             show: false,
-            amount: 1
+            amount: 1,
+            store
       }  
     },
     props: {
@@ -48,11 +53,15 @@ export default {
         },
         toggleCheese() {
             this.choice = false
-            this.price = this.pizza.sizeandcrust.mediumstuffedcrustcheesemax.price
+            this.price = this.pizza.mediumstuffedcrustcheesemax
             this.size = "cheese max"
         }, decrement() {
             if (this.amount - 1 !== 0) {
                 this.amount -= 1
+            }
+        }, increment() {
+            if (this.amount < 10) {
+                this.amount += 1
             }
         }, animation() {
             const animatedBox = document.getElementById(this.pizza.id);
@@ -63,7 +72,7 @@ export default {
                 animatedBox.style.display = "none";
                 animatedBox.classList.remove("animated");
             });
-            this.$emit('addToCart', this.pizza, this.amount, this.price, this.size, 'pizza');
+            store.addToCart(this.pizza, this.amount, this.price, this.size, "pizza")
             this.amount = 1
         }
     }
@@ -80,7 +89,14 @@ export default {
     position: fixed;
     display: none;
 }
-
+.material-symbols-rounded {
+    color: green;
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 24
+}
 .animated {
     animation: moveAndCurve 1s ease-in-out;
 }

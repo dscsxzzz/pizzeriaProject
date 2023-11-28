@@ -7,9 +7,9 @@
         </div>
         <div class="btns">
             <div class="amount">
-                <button @click="this.$emit('decrement', position, 'pizza')">-</button>
+                <button @click="store.decrementOrder(position, 'pizza')">-</button>
                 <p>{{ position.amount }}</p>
-                <button @click="this.$emit('increment', position, 'pizza')">+</button>
+                <button @click="store.incrementOrder(position, 'pizza')">+</button>
             </div>
             <p>{{ position.price * position.amount * 40}} UAH</p>
         </div>
@@ -21,15 +21,16 @@
             </div>
             <div class="btns">
                 <div class="amount">
-                    <button @click="this.$emit('decrement', position, 'dessert')">-</button>
+                    <button @click="store.decrementOrder(position, 'dessert')">-</button>
                     <p>{{ position.amount }}</p>
-                    <button @click="this.$emit('increment', position, 'dessert')">+</button>
+                    <button @click="store.incrementOrder(position, 'dessert')">+</button>
                 </div>
                 <p>{{ position.price * position.amount * 40 }} UAH</p>
             </div>
         </div>
 </template>
 <script>
+import { store } from '../store/store';
 export default {
     emits: ['decrement', 'increment'],
     props: {
@@ -38,6 +39,10 @@ export default {
             required: true
         }, type:{
             type:String
+        }
+    }, data() {
+        return {
+            store
         }
     }
     

@@ -4,26 +4,22 @@
             <div v-if="close" @click.stop class="formContainer">
                 <div class="orderHeader">
                     <h1>Order</h1>
-                    <a href="" @click.prevent="renderForm">X</a>
+                    <a @click.prevent="renderForm">X</a>
                 </div>
                 <div class="orderItems">
-                    <OrderItem v-for="position in order.pizzas"
+                    <OrderItem v-for="position in store.order.pizzas"
                     :position="position"
                     :type="'pizza'"
-                    @increment="$emit('increment', position, 'pizza')"
-                    @decrement="$emit('decrement', position, 'pizza')"
                     />
-                    <OrderItem v-for="position in order.desserts"
+                    <OrderItem v-for="position in store.order.desserts"
                     :position="position"
                     :type="'dessert'"
-                    @increment="$emit('increment', position, 'dessert')"
-                    @decrement="$emit('decrement', position, 'dessert')"
                     />
                 </div>
                 <div class="orderManage">
-                    <h3 class="totalPrice">Total price: {{totalPrice * 40}} UAH</h3>
+                    <h3 class="totalPrice">Total price: {{store.totalPrice * 40}} UAH</h3>
                     <button 
-                    @click="this.$emit('orderDetails')"
+                    @click="store.orderDetails = true"
                     >Order</button>
                 </div>
             </div>
@@ -31,9 +27,9 @@
     </Wrapper>
 </template>
 <script>
-import OrderItem from './OrderItem.vue'
+import OrderItem from './OrderItem.vue';
 import Wrapper from './Wrapper.vue';
-
+import { store } from '../store/store';
 export default {
     emits: ['decrement', 'increment', 'orderDetails', 'renderOrder'],
     components: {
@@ -43,23 +39,17 @@ export default {
         return {
             close: {
                 default: true
-            }
+            },
+            store
 
         }
     },
-    props: {
-        order: {
-            type: Object,
-            required: true
-        }, totalPrice: {
-            type: Number
-        }
-    }, methods: {
+     methods: {
         renderForm() {
+            this.close = false;
             setTimeout(() => {
-                this.$emit('renderOrder', false)
-            }, 400)
-            this.close = false
+                store.orderSideBar = false;
+            }, 200);
         }
     }
     
@@ -67,25 +57,25 @@ export default {
 }
 </script>
 <style scoped>
+.order-enter-active,
+.order-leave-active{
+    transition: all .5s ease-in-out;
+}
 .order-enter-from,
 .order-leave-to{
     transform: translate(-500px, 0);
 }
 
 
-.order-enter-active,
-.order-leave-active{
-    transition: all .5s ease-in-out;
-}
 
 .formContainer{
     display: flex;
-    justify-content: space-between;
     flex-direction: column;
+    overflow-y: scroll;
+    justify-content: space-between;
     width: 25%;
-    height: 100vh;
+    height: 100%;
     padding: 1%;
-    position: absolute;
     background-color: white;
     text-align: center;
 }
@@ -95,7 +85,7 @@ export default {
     overflow-y: auto;
     border-radius: 5px;
     margin-top: 10px;
-    min-height: 80%;
+    height: 70%;
 }
 .orderHeader{
     display: flex;
@@ -119,9 +109,11 @@ a{
 a:hover{
     background-color: black;
     color: #fefae0;
+    cursor: pointer;
 }
 
 .orderManage{
+    justify-self: flex-end;
     display: flex;
     flex-direction: row;
     text-align: center;
@@ -163,20 +155,17 @@ a:hover{
 @media only screen and (max-width: 920px)and (max-height: 1400px) and (orientation: portrait)  {
     .formContainer{
         width: 50%;
-        grid-template-rows: 10% 55% 35%;
     }
 }
 @media only screen and (max-width: 920px) and (orientation: portrait)  {
     .formContainer{
         width: 50%;
-        grid-template-rows: 10% 55% 35%;
     }
 }
 
 @media only screen and (max-width: 550px) and (orientation: portrait)  {
     .formContainer{
         width: 100%;
-        grid-template-rows: 10% 75% 15%;
     }
 }
 
@@ -188,7 +177,6 @@ a:hover{
 @media only screen and (max-width: 920px) and (orientation: landscape) {
     .formContainer{
         width: 100%;
-        grid-template-rows: 10% 70% 20%;
     }
 }
 </style>

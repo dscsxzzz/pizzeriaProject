@@ -1,36 +1,29 @@
 <template>
     <transition name="nav-fade" appear>
         <nav>
-            <div @click.prevent="this.$emit('myOrder')" href="" class="logo">
+            <div @click.prevent="store.orderSideBar = true" href="" class="logo">
                     <span class="material-symbols-outlined">
                         shopping_cart
                     </span>
-                    <p v-if="order.pizzas.length !== 0 || order.desserts.length !== 0" class="counter">
-                        {{order.desserts.length + order.pizzas.length}}
+                    <p v-if="store.order.pizzas.length !== 0 || store.order.desserts.length !== 0" class="counter">
+                        {{store.order.desserts.length + store.order.pizzas.length}}
                     </p>
             </div>
-            
-            <h4 v-if="!logged" href="" id="user" @click.prevent="this.$emit('login')">My Account</h4>
-            <h4 v-else href="" @click.prevent="this.$emit('account')" id="user">{{username}}</h4>
+            <h4 @click.prevent="$router.push('/')">MENU</h4>
+            <h4 v-if="!store.logged" href="" id="user" @click.prevent="$router.push('/login')">My Account</h4>
+            <h4 v-else href="" @click.prevent="$router.push('/details/account')" id="user">{{store.user.username}}</h4>
         </nav>
     </transition>
 </template>
 <script>
+import { store } from '../store/store';
+import router from '../router';
 export default {
-    props: {
-        username: {
-            type: String,
-            required: true
-        }, logged :{
-            type: Boolean,
-            required: true
-        }, order: {
-            type: Object,
-            required: false
-        }
-    }, data() {
+    data() {
         return {
-            disabled: this.order.pizzas.length === 0 && this.order.desserts.length === 0
+            disabled: store.order.pizzas.length === 0 && store.order.desserts.length === 0,
+            store,
+            router
         }
     }
     
@@ -50,6 +43,7 @@ export default {
     background-color: rgb(255, 0, 0);
     color: white;
     font-weight: 600;
+    text-align: center;
     transform: translate(-10px, 20px);
 }
 
@@ -88,23 +82,40 @@ export default {
     flex-direction: row;
 }
 nav{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    text-align: center;
-    align-items: center;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
     background-color: #e68028;
     padding: 15px;
     min-height: 60px;
     position: sticky;
     z-index: 100001;
     top: 0;
-
 }
 
+
 h4{
-    color: black;
+    color: rgb(0, 0, 0);
+    border-radius: 5px;
+    background-color: rgb(255, 255, 255);
+    min-width: 80px;
+    max-width: max-content;
+    font-weight: 600;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.438);
+    padding: 8px;
     text-decoration: none;
+    justify-self: center;
+    align-self: center;
+    text-align: center;
     cursor: pointer;
+    transition: all 0.2s ease-in;
+}
+
+h4:hover{
+    background-color: #e68028;
+    color: azure;
+}
+
+#user{
+    justify-self: flex-end;
 }
 </style>

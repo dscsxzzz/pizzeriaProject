@@ -4,14 +4,12 @@
                 v-if="content === 'pizzas'"
                 v-for="pizza in pizzas.slice(start, end)"
                 :pizza="pizza"
-                @addToCart="addToCart"
                 :key="pizza"
                 />
                 <Dessert
                 v-else
                 v-for="dessert in desserts.slice(start, end)"
                 :dessert="dessert"
-                @addToCartDessert="addToCartDessert"
                 :key="dessert"
                 />
             <div class="loadmore">
@@ -52,12 +50,7 @@ export default {
     }
 },
      methods: {
-        addToCart(pizza, amount,price, size, type) {
-            this.$emit('addToCart', pizza, amount,price, size, type)
-         },
-        addToCartDessert(dessert, amount, price, type) {
-            this.$emit('addToCartDessert', dessert, amount, price, type)
-         }, handlePage(page) {
+        handlePage(page) {
             window.scrollTo({
                 top: 0,
                 behavior: 'smooth',
@@ -72,6 +65,10 @@ export default {
                 this.pages = content === "pizzas" ? Math.ceil(this.pizzas.length / 10) : Math.ceil(this.desserts.length / 10), this.start = 0, this.end = 10, this.choice = 1;
             },
             immediate: true
+         }, pizzas: {
+            handler(pizzas) {
+                this.pages = this.content === "pizzas" ? Math.ceil(pizzas.length / 10) : Math.ceil(this.desserts.length / 10), this.start = 0, this.end = 10, this.choice = 1;
+            }, immediate: true
         }
     }
 }
@@ -87,6 +84,7 @@ export default {
         padding: 20px;
         width: 100%;
         max-width: 1300px;
+        min-height: 50vh;
     }
     .login-fade-enter-active,
 .login-fade-leave-active {
@@ -98,16 +96,16 @@ export default {
   opacity: 0;
 }
 
-    .loadmore{
+.loadmore{
         display: flex;
         flex-direction: row;
-        justify-content: space-between;
+        justify-content: center;
         align-items: center;
         width: 80%;
         max-width: 200px;
         padding: 20px;
         text-align: center;
-    }
+}
     .choice{
         background-color: black !important;;
         color: white !important;
@@ -122,6 +120,7 @@ export default {
         width: 35px;
         border-radius: 100%;
         cursor: pointer;
+        margin-left: 10px;
     }
 
 </style>
