@@ -7,32 +7,29 @@
                 <img v-else-if="choice === 3" src="/imgs/6198806.jpg" alt="" style="width:90%;position:absolute">
             </transition>
         <div class="choice">
-            <p href="" @click="choice = 1">
+            <p @click="choice = 1">
                 <span v-if="choice === 1" class="material-symbols-outlined">
-    radio_button_checked
-    </span>
-    <span v-else class="material-symbols-outlined">
-    radio_button_unchecked
-    </span>
+                radio_button_checked
+                </span>
+                <span v-else class="material-symbols-outlined">
+                radio_button_unchecked
+                </span>
             </p>
-            <p href="" @click="choice = 2">
-                <transition name="">
-                
-                </transition>
+            <p @click="choice = 2">
                 <span v-if="choice === 2" class="material-symbols-outlined">
-        radio_button_checked
-        </span>
-        <span v-else class="material-symbols-outlined">
-        radio_button_unchecked
-        </span>
+                radio_button_checked
+                </span>
+                <span v-else class="material-symbols-outlined">
+                radio_button_unchecked
+                </span>
             </p>
-            <p href="" @click="choice = 3">
+            <p @click="choice = 3">
                 <span v-if="choice === 3" class="material-symbols-outlined">
-        radio_button_checked
-        </span>
-        <span v-else class="material-symbols-outlined">
-        radio_button_unchecked
-        </span>
+                radio_button_checked
+                </span>
+                <span v-else class="material-symbols-outlined">
+                radio_button_unchecked
+                </span>
             </p>
         </div>
     </div>

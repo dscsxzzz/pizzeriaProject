@@ -182,10 +182,10 @@ export default {
         }, 2000)
         }
       }, async PostOrderToServer() {
-        
+      const id = store.logged ? store.user.id : 1
       const jsonBody = JSON.stringify(store.order);
       console.log(jsonBody)
-      const response = await fetch(`${ baseUrl.baseUrl }/Order/${store.user.id}`, {
+      const response = await fetch(`${ baseUrl.baseUrl }/Order/${id}`, {
         method: 'POST',
         headers: {
           Accept: 'application.json',
