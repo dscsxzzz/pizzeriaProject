@@ -185,10 +185,10 @@ export default {
         
       const jsonBody = JSON.stringify(store.order);
       console.log(jsonBody)
-      const response = await fetch(`${ baseUrl.baseUrl }/Order/${store.user.id}`, {
+      const response = await fetch(`${ baseUrl.baseUrl }/user/order/${store.user.id}`, {
         method: 'POST',
         headers: {
-          Accept: 'application.json',
+          Accept: 'application/json',
           'Content-Type': 'application/json'
         },
         body: jsonBody,
