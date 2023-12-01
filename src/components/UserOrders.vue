@@ -22,7 +22,7 @@ export default {
     }, methods: {
         async getOrders() {
             if (store.user.id !== "") {
-                const res = await fetch(`${baseUrl.baseUrl}/Order/${store.user.id}/Orders`)
+                const res = await fetch(`${baseUrl.baseUrl}/user/order-get/${store.user.id}`)
                 const orders = await res.json()
                 console.log(orders, store)
                 for (let i = 0; i < orders.length; i++) {
