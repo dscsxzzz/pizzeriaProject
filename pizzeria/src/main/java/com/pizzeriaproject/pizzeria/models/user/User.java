@@ -1,5 +1,7 @@
-package com.pizzeriaproject.pizzeria.models;
+package com.pizzeriaproject.pizzeria.models.user;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.pizzeriaproject.pizzeria.models.order.Order;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
@@ -36,6 +38,10 @@ public class User implements UserDetails {
             inverseJoinColumns = {@JoinColumn(name = "role_id")}
     )
     private Set<Role> authorities;
+
+    @JsonBackReference
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    private Set<Order> orders;
 
     public User() {
         authorities = new HashSet<>();

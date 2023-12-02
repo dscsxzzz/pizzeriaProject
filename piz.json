@@ -1,0 +1,119 @@
+{
+  "pizzas": [
+    {
+      "pizza": {
+        "id": 1,
+        "name": "Margherita",
+        "veg": true,
+        "price": 3,
+        "description": "Cheese",
+        "img": "https://api.pizzahut.io/v1/content/en-in/in-1/images/pizza/margherita.90f9451fd66871fb6f9cf7d506053f18.1.jpg?width=550",
+        "mediumPan": 3,
+        "mediumstuffedcrustcheesemax": 5,
+        "mediumstuffedcrustvegkebab": 8
+      },
+      "amount": 3,
+      "price": 3,
+      "size": "normal"
+    },
+    {
+      "pizza": {
+        "id": 2,
+        "name": "Tandoori Paneer",
+        "veg": true,
+        "price": 7,
+        "description": "Spiced paneer, Onion, Green Capsicum & Red Paprika in Tandoori Sauce",
+        "img": "https://api.pizzahut.io/v1/content/en-in/in-1/images/pizza/tandoori-paneer.4ef45717e972cf45b43c010e3cde5a22.1.jpg?width=550",
+        "mediumPan": 7,
+        "mediumstuffedcrustcheesemax": 9,
+        "mediumstuffedcrustvegkebab": 12
+      },
+      "amount": 3,
+      "price": 7,
+      "size": "normal"
+    }
+  ],
+  "desserts": [
+    {{
+      "pizzas": [
+        {
+          "pizza": {
+            "id": 1,
+            "name": "Margherita",
+            "veg": true,
+            "price": 3,
+            "description": "Cheese",
+            "img": "https://api.pizzahut.io/v1/content/en-in/in-1/images/pizza/margherita.90f9451fd66871fb6f9cf7d506053f18.1.jpg?width=550",
+            "mediumPan": 3,
+            "mediumstuffedcrustcheesemax": 5,
+            "mediumstuffedcrustvegkebab": 8
+          },
+          "amount": 3,
+          "price": 3,
+          "size": "normal"
+        },
+        {
+          "pizza": {
+            "id": 2,
+            "name": "Tandoori Paneer",
+            "veg": true,
+            "price": 7,
+            "description": "Spiced paneer, Onion, Green Capsicum & Red Paprika in Tandoori Sauce",
+            "img": "https://api.pizzahut.io/v1/content/en-in/in-1/images/pizza/tandoori-paneer.4ef45717e972cf45b43c010e3cde5a22.1.jpg?width=550",
+            "mediumPan": 7,
+            "mediumstuffedcrustcheesemax": 9,
+            "mediumstuffedcrustvegkebab": 12
+          },
+          "amount": 3,
+          "price": 7,
+          "size": "normal"
+        }
+      ],
+      "desserts": [
+        {
+          "dessert": {
+            "id": 1,
+            "price": 2,
+            "name": "Choco Sundae",
+            "description": "Choco Sundae Cup (100 ml)",
+            "img": "https://www.havmor.com/sites/default/files/styles/502x375/public/gallery/Choco%20Sundae__0.webp?itok=Md5Ameuw"
+          },
+          "amount": 2,
+          "price": 2
+        },
+        {
+          "dessert": {
+            "id": 2,
+            "price": 2,
+            "name": "Cornetto Double Chocolate",
+            "description": "Cornetto Double Chocolate Cone (105 ml)",
+            "img": "https://api.pizzahut.io/v1/content/en-in/in-1/images/dessert/cornetto-double-chocolate.acc21849ac732f2f85998ad73e532d40.1.jpg?width=522"
+          },
+          "amount": 2,
+          "price": 2
+        }
+      ]
+    },
+      "dessert": {
+        "id": 1,
+        "price": 2,
+        "name": "Choco Sundae",
+        "description": "Choco Sundae Cup (100 ml)",
+        "img": "https://www.havmor.com/sites/default/files/styles/502x375/public/gallery/Choco%20Sundae__0.webp?itok=Md5Ameuw"
+      },
+      "amount": 2,
+      "price": 2
+    },
+    {
+      "dessert": {
+        "id": 2,
+        "price": 2,
+        "name": "Cornetto Double Chocolate",
+        "description": "Cornetto Double Chocolate Cone (105 ml)",
+        "img": "https://api.pizzahut.io/v1/content/en-in/in-1/images/dessert/cornetto-double-chocolate.acc21849ac732f2f85998ad73e532d40.1.jpg?width=522"
+      },
+      "amount": 2,
+      "price": 2
+    }
+  ]
+}

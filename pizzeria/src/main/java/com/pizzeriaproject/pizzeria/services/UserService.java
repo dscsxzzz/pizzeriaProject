@@ -1,6 +1,6 @@
 package com.pizzeriaproject.pizzeria.services;
 
-import com.pizzeriaproject.pizzeria.models.User;
+import com.pizzeriaproject.pizzeria.models.user.User;
 import com.pizzeriaproject.pizzeria.repository.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -73,6 +73,6 @@ public class UserService implements UserDetailsService {
                     return userRepository.save(user1);
                 }
         ).orElseThrow(() -> new RuntimeException("User not found!"));
-        return new ResponseEntity<>(user, HttpStatusCode.valueOf(204));
+        return new ResponseEntity<>(user, HttpStatusCode.valueOf(200));
     }
 }

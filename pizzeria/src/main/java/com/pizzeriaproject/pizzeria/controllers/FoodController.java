@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RequestMapping("")
-@CrossOrigin(origins = "http://localhost:5173")
 @RestController
+@CrossOrigin(origins = "${spring.web.cors.allowed-origins}")
 public class FoodController {
 
     private final PizzaService pizzaService;

@@ -1,13 +1,13 @@
 package com.pizzeriaproject.pizzeria.controllers;
 
-import com.pizzeriaproject.pizzeria.models.RegistrationDTO;
+import com.pizzeriaproject.pizzeria.models.user.RegistrationDTO;
 import com.pizzeriaproject.pizzeria.services.AuthenticationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/auth")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "${spring.web.cors.allowed-origins}")
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
@@ -28,11 +28,12 @@ public class AuthenticationController {
     
     @PostMapping(value = "/forgot-password/{username}")
     public ResponseEntity<?> forgotPasswordUser(@PathVariable String username) {
+        System.out.println(username);
         return authenticationService.forgotPassword(username);
     }
 
     @PostMapping(value = "/forgot-password-code/{code}")
-    public ResponseEntity<?> forgotPasswordCodeUser(@PathVariable String code) throws Exception {
+    public ResponseEntity<?> forgotPasswordCodeUser(@PathVariable String code) {
         return authenticationService.checkCode(code);
     }
 }

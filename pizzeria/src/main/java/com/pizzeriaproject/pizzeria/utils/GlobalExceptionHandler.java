@@ -1,6 +1,6 @@
 package com.pizzeriaproject.pizzeria.utils;
 
-import com.pizzeriaproject.pizzeria.models.ErrorResponseDTO;
+import com.pizzeriaproject.pizzeria.models.user.ErrorResponseDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

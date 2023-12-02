@@ -1,4 +1,4 @@
-package com.pizzeriaproject.pizzeria.models;
+package com.pizzeriaproject.pizzeria.models.user;
 
 import jakarta.persistence.*;
 import lombok.Getter;

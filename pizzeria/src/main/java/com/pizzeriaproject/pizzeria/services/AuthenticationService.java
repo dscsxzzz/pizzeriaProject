@@ -1,8 +1,9 @@
 package com.pizzeriaproject.pizzeria.services;
 
-import com.pizzeriaproject.pizzeria.models.LoginResponseDTO;
-import com.pizzeriaproject.pizzeria.models.Role;
-import com.pizzeriaproject.pizzeria.models.User;
+import com.pizzeriaproject.pizzeria.models.user.ForgotPasswordResponseDTO;
+import com.pizzeriaproject.pizzeria.models.user.LoginResponseDTO;
+import com.pizzeriaproject.pizzeria.models.user.Role;
+import com.pizzeriaproject.pizzeria.models.user.User;
 import com.pizzeriaproject.pizzeria.repository.RoleRepository;
 import com.pizzeriaproject.pizzeria.repository.UserRepository;
 import com.pizzeriaproject.pizzeria.utils.GlobalExceptionHandler;
@@ -101,7 +102,10 @@ public class AuthenticationService {
         try {
             User user = userRepository.findByUsername(username).get();
             emailService.sendHtmlMessage(user.getEmail(), "Password Reset Request", codeService.generateCode());
-            return new ResponseEntity<>("Email sent", HttpStatusCode.valueOf(250));
+            ForgotPasswordResponseDTO forgotPasswordResponseDTO = new ForgotPasswordResponseDTO("Email was sent", user.getId());
+            System.out.println(username);
+            System.out.println(forgotPasswordResponseDTO);
+            return new ResponseEntity<>(forgotPasswordResponseDTO, HttpStatusCode.valueOf(200));
         } catch (Exception ex) {
             return globalExceptionHandler.handleAllExceptions(ex);
         }
@@ -109,10 +113,13 @@ public class AuthenticationService {
 
     public ResponseEntity<?> checkCode(String code) {
         try {
+
             if (codeService.isCodeValid(code)) {
-                return new ResponseEntity<>("The code is valid", HttpStatus.OK);
+                ForgotPasswordResponseDTO forgotPasswordResponseDTO = new ForgotPasswordResponseDTO("Email was sent");
+                return new ResponseEntity<>(forgotPasswordResponseDTO, HttpStatusCode.valueOf(200));
             } else {
-                return new ResponseEntity<>("The code is expired", HttpStatusCode.valueOf(401));
+                ForgotPasswordResponseDTO forgotPasswordResponseDTO = new ForgotPasswordResponseDTO("The code is expired");
+                return new ResponseEntity<>(forgotPasswordResponseDTO, HttpStatusCode.valueOf(401));
             }
         } catch (Exception e) {
             return globalExceptionHandler.handleAllExceptions(e);

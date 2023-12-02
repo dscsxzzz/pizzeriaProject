@@ -1,6 +1,6 @@
 package com.pizzeriaproject.pizzeria.repository;
 
-import com.pizzeriaproject.pizzeria.models.User;
+import com.pizzeriaproject.pizzeria.models.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

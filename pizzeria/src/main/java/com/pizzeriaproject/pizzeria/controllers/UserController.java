@@ -1,15 +1,17 @@
 package com.pizzeriaproject.pizzeria.controllers;
 
-import com.pizzeriaproject.pizzeria.models.ChangeUserDataDTO;
-import com.pizzeriaproject.pizzeria.models.OrderDTO;
+import com.pizzeriaproject.pizzeria.models.order.Order;
+import com.pizzeriaproject.pizzeria.models.user.ChangeUserDataDTO;
+import com.pizzeriaproject.pizzeria.models.order.OrderDTO;
 import com.pizzeriaproject.pizzeria.services.OrderService;
 import com.pizzeriaproject.pizzeria.services.UserService;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/user")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "${spring.web.cors.allowed-origins}")
 public class UserController {
 
     private final OrderService orderService;
@@ -26,12 +28,18 @@ public class UserController {
         return "User access level";
     }
 
-    //TODO change return type to ResponseEntity
-    @PostMapping("/order")
-    public OrderDTO newOrder(@RequestBody OrderDTO body) {
-        orderService.addOrder(body.getPersonId(), body.getPizzaList(), body.getDessertList());
-        return new OrderDTO(body.getPersonId(), body.getPizzaList(), body.getDessertList());
+
+    @PostMapping("/order/{id}")
+    public ResponseEntity<?> newOrder(@RequestBody OrderDTO order, @PathVariable Long id) {
+        return orderService.addOrder(id, order.getPizzas(), order.getDesserts());
     }
+
+    // TODO All user orders @GET
+    @GetMapping("/order-get/{id}")
+    public ResponseEntity<?> getOrder(@PathVariable Long id) {
+        return orderService.getOrder(id);
+    }
+
 
     @PutMapping("/change-user-info/{id}")
     public ResponseEntity<?> changeUserInformation(@RequestBody ChangeUserDataDTO body, @PathVariable Long id) {
