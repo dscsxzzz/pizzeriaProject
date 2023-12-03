@@ -13,5 +13,4 @@ public class DessertDTO {
     private double price;
     private String description;
     private String img;
-    private int quantity;
 }

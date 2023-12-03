@@ -103,8 +103,6 @@ public class AuthenticationService {
             User user = userRepository.findByUsername(username).get();
             emailService.sendHtmlMessage(user.getEmail(), "Password Reset Request", codeService.generateCode());
             ForgotPasswordResponseDTO forgotPasswordResponseDTO = new ForgotPasswordResponseDTO("Email was sent", user.getId());
-            System.out.println(username);
-            System.out.println(forgotPasswordResponseDTO);
             return new ResponseEntity<>(forgotPasswordResponseDTO, HttpStatusCode.valueOf(200));
         } catch (Exception ex) {
             return globalExceptionHandler.handleAllExceptions(ex);
@@ -113,7 +111,6 @@ public class AuthenticationService {
 
     public ResponseEntity<?> checkCode(String code) {
         try {
-
             if (codeService.isCodeValid(code)) {
                 ForgotPasswordResponseDTO forgotPasswordResponseDTO = new ForgotPasswordResponseDTO("Email was sent");
                 return new ResponseEntity<>(forgotPasswordResponseDTO, HttpStatusCode.valueOf(200));

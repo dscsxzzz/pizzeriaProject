@@ -16,25 +16,22 @@ public class Dessert {
     private double price;
     private String description;
     private String img;
-    private int quantity;
 
     public Dessert() {
     }
 
-    public Dessert(Long id, String name, double price, String description, String img, int quantity) {
+    public Dessert(Long id, String name, double price, String description, String img) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.description = description;
         this.img = img;
-        this.quantity = quantity;
     }
 
-    public Dessert(String name, double price, String description, String img, int quantity) {
+    public Dessert(String name, double price, String description, String img) {
         this.name = name;
         this.price = price;
         this.description = description;
         this.img = img;
-        this.quantity = quantity;
     }
 }

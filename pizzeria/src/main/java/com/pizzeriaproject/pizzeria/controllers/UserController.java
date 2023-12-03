@@ -34,7 +34,6 @@ public class UserController {
         return orderService.addOrder(id, order.getPizzas(), order.getDesserts());
     }
 
-    // TODO All user orders @GET
     @GetMapping("/order-get/{id}")
     public ResponseEntity<?> getOrder(@PathVariable Long id) {
         return orderService.getOrder(id);
