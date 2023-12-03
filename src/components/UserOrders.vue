@@ -32,6 +32,7 @@ export default {
         }
     }, mounted() {
         this.getOrders()
+        console.log(this.orders);
     }
 }
 </script>
