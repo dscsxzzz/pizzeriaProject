@@ -50,8 +50,10 @@ export default {
     grid-template-columns: 1fr 10fr;
     min-height: 100svh;
     min-height: 100cqh;
+    min-height: 100vh;
     width: 100%;
     background-color: white;
+    transition: all 0.2s;
 }
 
 .head{
@@ -66,6 +68,7 @@ export default {
     padding: 10px 5% 10px 5%;
     height: 100svh;
     height: 100cqh;
+    transition: all 0.2s;
 }
 
 .choosen{
@@ -79,6 +82,7 @@ aside{
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    transition: all 0.2s;
 }
 button{
     border: none;

@@ -20,6 +20,7 @@
             <div class="positions">
                 <div v-for="order in orders.desserts" class="position">
                     <p style="color:#e68028">{{ order.dessert.name }} </p>
+                    <p>normal</p>
                     <p>{{ order.amount }}</p>
                     <p>{{order.price * 40}} UAH</p>
                 </div>
@@ -65,13 +66,13 @@ export default {
     flex-direction: column;
     justify-content: space-between;
     width: 30%;
-    height: 300px;
+    height: max-content;
     margin: 10px;
     padding: 10px;
     background-repeat: none;
     background-size: cover;
     box-shadow: 0 0px 15px rgba(84, 83, 85, 0.295);
-
+    
     border-radius: 5px;
 }
 
@@ -86,15 +87,13 @@ p{
 }
 .details{
     z-index: 3;
-    height: 190px;
-    display: grid;
-    grid-template-rows: 5fr 1fr;
+    height: max-content;
+    display: flex;
+    flex-direction: column;
 }
 .positions{
     display: flex;
-    flex-direction: column;
-    height: 100px;
-    overflow-y: scroll;
+    flex-direction: column;  
 }
 .position{
     display: grid;

@@ -141,6 +141,10 @@ export default {
 }
 </script>
 <style scoped>
+.UserAccount {
+    overflow-y: scroll;
+}
+
 .login-fade-enter-active,
 .login-fade-leave-active {
   transition: opacity 0.8s ease-in-out;

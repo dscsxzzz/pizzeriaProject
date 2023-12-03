@@ -53,7 +53,11 @@ export default {
     height: 80svh;
     height: 80cqh;
     height: 80vh;
-
+    flex-direction: column; 
 }
-
+@media only screen and (max-width: 1281px) {
+  .orders {
+    flex-direction: row;
+  }
+}
 </style>
