@@ -67,7 +67,7 @@ export default {
                 headers: {
                     Accept: 'application/json',
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem(token)}`,
+                    'Authorization': `Bearer ${localStorage.getItem("token")}`,
                 },
                 body: jsonBody1,
                 cache: 'default'
@@ -89,7 +89,7 @@ export default {
                     headers: {
                         Accept: 'application/json',
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${localStorage.getItem(token)}`,
+                        'Authorization': `Bearer ${localStorage.getItem("token")}`,
                     },
                     body: jsonBody,
                     cache: 'default'
