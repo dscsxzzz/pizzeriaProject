@@ -11,7 +11,6 @@ public class CodeService {
     private final Random random = new Random();
     private static final long EXPIRATION_TIME = 300000;
 
-    // TODO Check if code is in Memory
     public String generateCode() {
         String code = String.format("%06d", random.nextInt(999999));
         codes.put(code, System.currentTimeMillis() + EXPIRATION_TIME);

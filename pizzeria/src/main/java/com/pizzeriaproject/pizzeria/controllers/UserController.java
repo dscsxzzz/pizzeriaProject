@@ -1,11 +1,9 @@
 package com.pizzeriaproject.pizzeria.controllers;
 
-import com.pizzeriaproject.pizzeria.models.order.Order;
 import com.pizzeriaproject.pizzeria.models.user.ChangeUserDataDTO;
 import com.pizzeriaproject.pizzeria.models.order.OrderDTO;
 import com.pizzeriaproject.pizzeria.services.OrderService;
 import com.pizzeriaproject.pizzeria.services.UserService;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

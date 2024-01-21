@@ -2,6 +2,7 @@ package com.pizzeriaproject.pizzeria.models.user;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -9,6 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 @Getter
 @Setter
 @Table(name = "roles")
+@NoArgsConstructor
 public class Role implements GrantedAuthority {
 
     @Id
@@ -19,9 +21,6 @@ public class Role implements GrantedAuthority {
 
     private String authority;
 
-    public Role() {
-        super();
-    }
 
     public Role(String authority) {
         this.authority = authority;

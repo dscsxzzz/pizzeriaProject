@@ -1,5 +1,6 @@
 package com.pizzeriaproject.pizzeria.controllers;
 
+import com.pizzeriaproject.pizzeria.models.user.ChangeUserDataDTO;
 import com.pizzeriaproject.pizzeria.models.user.RegistrationDTO;
 import com.pizzeriaproject.pizzeria.services.AuthenticationService;
 import org.springframework.http.ResponseEntity;
@@ -35,5 +36,10 @@ public class AuthenticationController {
     @PostMapping(value = "/forgot-password-code/{code}")
     public ResponseEntity<?> forgotPasswordCodeUser(@PathVariable String code) {
         return authenticationService.checkCode(code);
+    }
+
+    @PutMapping("/change-pass/{id}")
+    public ResponseEntity<?> changeUserPassword(@RequestBody ChangeUserDataDTO body, @PathVariable Long id) {
+        return authenticationService.changePassword(id, body.getPassword());
     }
 }

@@ -1,11 +1,11 @@
 package com.pizzeriaproject.pizzeria.models.order;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.pizzeriaproject.pizzeria.models.user.User;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.util.List;
@@ -13,6 +13,7 @@ import java.util.List;
 @Table(name = "orders")
 @Entity(name = "Order")
 @Data
+@NoArgsConstructor
 public class Order {
     @Id
     @SequenceGenerator(name = "order_sequence", sequenceName = "order_seq", allocationSize = 1)
@@ -33,11 +34,7 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<OrderItemDessert> desserts;
 
-    @JsonIgnore
     private Date date;
-
-    public Order() {
-    }
 
     public Order(Long id, User user, List<OrderItemPizza> pizzas, List<OrderItemDessert> desserts, Date date) {
         this.id = id;

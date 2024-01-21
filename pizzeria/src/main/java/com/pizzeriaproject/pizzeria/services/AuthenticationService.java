@@ -8,6 +8,7 @@ import com.pizzeriaproject.pizzeria.repository.RoleRepository;
 import com.pizzeriaproject.pizzeria.repository.UserRepository;
 import com.pizzeriaproject.pizzeria.utils.GlobalExceptionHandler;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -24,6 +25,7 @@ import java.util.Set;
 
 @Service
 @Transactional
+@Slf4j
 public class AuthenticationService {
 
     private final UserRepository userRepository;
@@ -71,29 +73,24 @@ public class AuthenticationService {
             authorities.add(userRole);
 
             User user = userRepository.save(new User(username, encodedPassword, email, name, surname, phone, address, authorities));
+            log.info("New user registered {}", user);
             return new ResponseEntity<>(user, HttpStatus.OK);
         } catch (Exception e) {
-            // TODO logging
-            System.out.println(e.getMessage() + " - ERROR MESSAGE ");
             return globalExceptionHandler.handleAllExceptions(e);
         }
     }
 
     public ResponseEntity<?> loginUser(String username, String password) {
-
         try {
             Authentication auth = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(username, password)
             );
-            // TODO to understand how to work with JWT
             String token = tokenService.generateJwt(auth);
             User user = userRepository.findByUsername(username).get();
-            LoginResponseDTO loginResponseDTO = new LoginResponseDTO(user.getId(), username, user.getPassword(), user.getEmail(), user.getName(), user.getSurname(), user.getPhone(), user.getAddress());
+            LoginResponseDTO loginResponseDTO = new LoginResponseDTO(user.getId(), username, user.getPassword(), user.getEmail(), user.getName(), user.getSurname(), user.getPhone(), user.getAddress(), token);
+            log.info("User login {}", loginResponseDTO);
             return new ResponseEntity<>(loginResponseDTO, HttpStatus.OK);
-
         } catch (AuthenticationException e) {
-            // TODO logging
-            System.out.println(e.getMessage() + " " + username);
             return globalExceptionHandler.handleAllExceptions(e);
         }
     }
@@ -121,5 +118,14 @@ public class AuthenticationService {
         } catch (Exception e) {
             return globalExceptionHandler.handleAllExceptions(e);
         }
+    }
+    public ResponseEntity<?> changePassword(Long id, String password) {
+        User user = userRepository.findById(id).map(
+                user1 -> {
+                    user1.setPassword(passwordEncoder.encode(password));
+                    return userRepository.save(user1);
+                }
+        ).orElseThrow(() -> new RuntimeException("User not found!"));
+        return new ResponseEntity<>(user, HttpStatusCode.valueOf(200));
     }
 }

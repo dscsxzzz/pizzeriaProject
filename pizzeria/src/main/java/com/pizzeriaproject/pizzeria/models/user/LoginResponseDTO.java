@@ -16,5 +16,5 @@ public class LoginResponseDTO {
     private String surname;
     private String phone;
     private String address;
-    //private String jwt;
+    private String jwt;
 }

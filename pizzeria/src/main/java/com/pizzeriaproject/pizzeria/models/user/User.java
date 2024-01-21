@@ -48,7 +48,6 @@ public class User implements UserDetails {
     }
 
     public User(String username, String password, String email, String name, String surname, String phone, String address, Set<Role> authorities) {
-        super();
         this.username = username;
         this.password = password;
         this.email = email;
@@ -60,7 +59,6 @@ public class User implements UserDetails {
     }
 
     public User(Long id, String username, String password, String email, String name, String surname, String phone, String address, Set<Role> authorities) {
-        super();
         this.id = id;
         this.username = username;
         this.password = password;

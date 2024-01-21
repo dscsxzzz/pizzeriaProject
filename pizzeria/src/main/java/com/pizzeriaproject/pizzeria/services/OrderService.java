@@ -16,6 +16,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
+@Transactional
 public class OrderService {
 
     private final OrderRepository orderRepository;

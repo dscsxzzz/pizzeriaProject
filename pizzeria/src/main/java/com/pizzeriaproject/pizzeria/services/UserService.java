@@ -2,6 +2,7 @@ package com.pizzeriaproject.pizzeria.services;
 
 import com.pizzeriaproject.pizzeria.models.user.User;
 import com.pizzeriaproject.pizzeria.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
+@Transactional
 public class UserService implements UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;
