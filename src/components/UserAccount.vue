@@ -87,6 +87,7 @@ export default {
                 phone: ""
                 }
             store.logged = false
+            localStorage.clear();
             router.push("/")
         }, async tryChangeAccount() {
             if (!this.error) {
