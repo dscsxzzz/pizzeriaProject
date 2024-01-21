@@ -1,67 +1,75 @@
 <template>
   <transition name="login-fade" appear>
     <Wrapper @click.stop="$router.push('/')">
-      <div @click.stop class="formContainer" >
-          <h2>User Login</h2>
-          <transition name="loading-fade">
-            <div v-if="logging" class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
-          </transition>
-        <transition  name="loading-fade">
+      <div @click.stop class="formContainer">
+        <h2>User Login</h2>
+        <transition name="loading-fade">
+          <div v-if="logging" class="lds-ellipsis">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+        </transition>
+        <transition name="loading-fade">
           <transition name="loading-fade" v-if="logged">
-              <h2 v-if="logged2" >Welcome, {{ username }}!</h2>
-              <h2 v-else >Incorrect password or username!</h2>
+            <h2 v-if="logged2">Welcome, {{ username }}!</h2>
+            <h2 v-else>Incorrect password or username!</h2>
           </transition>
         </transition>
-          <form @submit.prevent="tryLogin">
-            <div class="loginHolder">
-              <span class="material-symbols-outlined">
-                login
-              </span>
-              <input 
-                type="text"
-                name="login" 
-                :value="username" 
-                id="" 
-                placeholder="Login"
-                @change="username = $event.target.value"
-              >
-            </div>
-            <div class="loginHolder">
-              <span class="material-symbols-outlined">
-                password
-              </span>
-              <input type="password" 
-               name="password"
-               :value="password"
-               placeholder="Password"
-               @change="password = $event.target.value"
-              >
-            </div>
-              <button type="submit">Log In</button>
-          </form>
-          <div class="btns">
-              <button @click="$router.push('/forgot-password')" class="formDialogBtn"> Forgot password?</button>
-              <button @click="$router.push('/register')" class="formDialogBtn"> Create account</button>
+        <form @submit.prevent="tryLogin">
+          <div class="loginHolder">
+            <span class="material-symbols-outlined"> login </span>
+            <input
+              type="text"
+              name="login"
+              :value="username"
+              id=""
+              placeholder="Login"
+              @change="username = $event.target.value"
+            />
           </div>
+          <div class="loginHolder">
+            <span class="material-symbols-outlined"> password </span>
+            <input
+              type="password"
+              name="password"
+              :value="password"
+              placeholder="Password"
+              @change="password = $event.target.value"
+            />
+          </div>
+          <button type="submit">Log In</button>
+        </form>
+        <div class="btns">
+          <button
+            @click="$router.push('/forgot-password')"
+            class="formDialogBtn"
+          >
+            Forgot password?
+          </button>
+          <button @click="$router.push('/register')" class="formDialogBtn">
+            Create account
+          </button>
+        </div>
       </div>
     </Wrapper>
   </transition>
-
 </template>
 <script>
-import Wrapper from './Wrapper.vue';
-import router from '../router';
-import { store } from '../store/store';
-import baseUrl from '../config.json'
+import Wrapper from "./Wrapper.vue";
+import router from "../router";
+import { store } from "../store/store";
+import baseUrl from "../config.json";
 export default {
   components: {
-    Wrapper
+    Wrapper,
   },
   props: {
     show: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     return {
@@ -71,61 +79,67 @@ export default {
       logged2: false,
       logging: false,
       logged: false,
-      store
-    }
+      store,
+    };
   },
   methods: {
     async tryLogin() {
-      this.logging = true
+      this.logging = true;
       const body = {
-        "username": this.username,
-        "password" : this.password
-      }
+        username: this.username,
+        password: this.password,
+      };
       const jsonBody = JSON.stringify(body);
-      console.log(jsonBody)
+      console.log(jsonBody);
       const response = await fetch(`${baseUrl.baseUrl}/auth/login`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json'
+          Accept: "application/json",
+          "Content-Type": "application/json",
         },
         body: jsonBody,
-        cache: 'default'
-      })
-      const user = await response.json()
-      console.log(user)
+        cache: "default",
+      });
+      const user = await response.json();
+      console.log(user);
       if (response.status === 200) {
         setTimeout(() => {
           this.logging = false;
-        }, 650)
+        }, 650);
         this.logged2 = true;
         setTimeout(() => {
-          this.logged = true
-        }, 1500)
+          this.logged = true;
+        }, 1500);
         setTimeout(() => {
-          store.user = user
-          store.logged = true
-          router.push("/")
-        }, 2500)
-      }
-      else {
+          store.user = {
+            id: user.id,
+            username: user.username,
+            email: user.email,
+            name: user.name,
+            surname: user.surname,
+            address: user.address,
+            phone: user.phone,
+          };
+          localStorage.setItem("token", user.jwt);
+          store.logged = true;
+          router.push("/");
+        }, 2500);
+      } else {
         setTimeout(() => {
           this.logging = false;
-        }, 650)
+        }, 650);
         setTimeout(() => {
-          this.logged = true
-        }, 1500)
+          this.logged = true;
+        }, 1500);
         setTimeout(() => {
-          this.logged = false
-        }, 2500)
+          this.logged = false;
+        }, 2500);
       }
-    }
-  }
-  
-}
+    },
+  },
+};
 </script>
 <style scoped>
-
 .login-fade-enter-active,
 .login-fade-leave-active {
   transition: opacity 0.8s ease-in-out;
@@ -135,22 +149,18 @@ export default {
 .login-fade-leave-to {
   opacity: 0;
 }
-.loginHolder{
+.loginHolder {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
 }
-.loginHolder input{
-width: 90%;
+.loginHolder input {
+  width: 90%;
 }
 .material-symbols-outlined {
-  font-variation-settings:
-  'FILL' 0,
-  'wght' 400,
-  'GRAD' 0,
-  'opsz' 48
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 48;
 }
 .loading-fade-enter-active,
 .loading-fade-leave-active {
@@ -163,7 +173,7 @@ width: 90%;
 }
 
 .loading-fade-enter-active .inner,
-.loading-fade-leave-active .inner{
+.loading-fade-leave-active .inner {
   transition: opacity 0.8s ease-in-out;
 }
 
@@ -172,64 +182,60 @@ width: 90%;
   opacity: 0;
 }
 
+.formContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 25%;
+  max-height: max-content;
+  padding: 1%;
+  position: absolute;
+  background-color: white;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+form {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  margin-top: 10px;
+  width: 100%;
+}
+form button {
+  background-color: rgb(218, 215, 213);
+  padding: 10px;
+  color: rgb(0, 0, 0);
+  font-weight: 600;
+}
+.btns {
+  display: flex;
+  text-align: center;
+  justify-content: space-around;
+  padding: 10px;
+}
+button {
+  border: none;
+  background-color: rgb(218, 215, 213);
+  color: rgb(0, 0, 0);
+  transition: all 0.5s;
+}
+button:hover {
+  background-color: black;
+  color: antiquewhite;
+  cursor: pointer;
+}
+input {
+  padding: 10px;
+  background-color: rgb(218, 215, 213);
 
-
-.formContainer{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    width: 25%;
-    max-height: max-content;
-    padding: 1%;
-    position: absolute;
-    background-color: white;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+  color: rgb(0, 0, 0);
+  border: none;
 }
-form{
-    display: flex;
-    flex-direction: column;
-    padding: 20px;
-    margin-top: 10px;
-    width: 100%;
-    
+input::placeholder {
+  color: rgb(0, 0, 0);
 }
-form button{
-    background-color: rgb(218, 215, 213);;
-    padding: 10px;
-    color: rgb(0, 0, 0);
-    font-weight: 600;
-}
-.btns{
-    display: flex;
-    text-align: center;
-    justify-content: space-around;
-    padding: 10px;
-}
-    button{
-        border: none;
-        background-color: rgb(218, 215, 213);
-        color: rgb(0, 0, 0);
-        transition: all 0.5s;
-    }
-    button:hover{
-      background-color: black;
-      color: antiquewhite;
-        cursor: pointer;
-    }
-input{
-    padding: 10px;
-    background-color: rgb(218, 215, 213);
-    
-    color: rgb(0, 0, 0);
-    border: none;
-  }
-  input::placeholder{
-    color: rgb(0, 0, 0);
-    
-}
-h2{
+h2 {
   text-align: center;
   padding-top: 15px;
   padding-bottom: 15px;
@@ -294,25 +300,24 @@ h2{
   }
 }
 
-
 @media only screen and (max-width: 1200px) {
   .formContainer {
     width: 40%;
   }
 }
-@media only screen and (max-width: 1200px) and (max-height: 601px)  {
+@media only screen and (max-width: 1200px) and (max-height: 601px) {
   .formContainer {
     width: 40%;
   }
 }
 
-@media only screen and (max-width: 900px) and (orientation: portrait)  {
+@media only screen and (max-width: 900px) and (orientation: portrait) {
   .formContainer {
     width: 50%;
   }
 }
 
-@media only screen and (max-width: 550px) and (orientation: portrait)  {
+@media only screen and (max-width: 550px) and (orientation: portrait) {
   .formContainer {
     width: 90%;
   }
@@ -320,20 +325,18 @@ h2{
 
 @media only screen and (max-width: 281px) and (orientation: portrait) {
   .formContainer {
-    
     width: 100%;
   }
-  .btns{
+  .btns {
     flex-direction: column;
     justify-content: space-between;
   }
 }
 @media only screen and (max-width: 920px) and (orientation: landscape) {
   .formContainer {
-    
     width: 410px;
   }
-  .btns{
+  .btns {
     flex-direction: row;
     justify-content: space-around;
   }

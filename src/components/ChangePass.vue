@@ -66,7 +66,8 @@ export default {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem(token)}`,
                 },
                 body: jsonBody1,
                 cache: 'default'
@@ -87,7 +88,8 @@ export default {
                     method: 'PUT',
                     headers: {
                         Accept: 'application/json',
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem(token)}`,
                     },
                     body: jsonBody,
                     cache: 'default'
